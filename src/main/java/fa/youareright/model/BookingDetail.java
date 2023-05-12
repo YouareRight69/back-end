@@ -1,7 +1,6 @@
 package fa.youareright.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import lombok.Data;
 
@@ -9,9 +8,20 @@ import lombok.Data;
 @Data
 public class BookingDetail {
     @Id
-    private String id;
+    @Column(name = "booking_detail_id",columnDefinition = "varchar(10)")
+    private String bookingDetailId;
     private String name;
-    
-	
-    
+
+    @ManyToOne
+    @JoinColumn(name = "service_id")
+    private HairService hairService;
+
+    @ManyToOne
+    @JoinColumn(name = "booking_id")
+    private Booking booking;
+
+    @ManyToOne
+    @JoinColumn(name = "emp_id")
+    private Employee employee;
+
 }
