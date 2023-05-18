@@ -33,5 +33,9 @@ public class Booking {
     @OneToOne(mappedBy = "booking")
     @JsonBackReference
     private Invoice invoice;
+
+    @ManyToOne
+    @JoinColumn(name = "working_time_id")
+    private WorkingTime workingTime;
      
 }
