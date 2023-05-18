@@ -20,6 +20,8 @@ public class Branch {
     private String branchId;
     private String name;
     private String address;
+    @Column(columnDefinition = "int default 0")
+    private int isDelete;
 
     @OneToMany(mappedBy = "branch")
     @JsonBackReference
