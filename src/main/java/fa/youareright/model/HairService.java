@@ -23,7 +23,8 @@ public class HairService {
     @Column(name = "description", columnDefinition = "text")
     private String description;
     private String type;
-
+    @Column(columnDefinition = "int default 0")
+    private int isDelete;
 
     @OneToMany(mappedBy = "hairService")
     @JsonBackReference

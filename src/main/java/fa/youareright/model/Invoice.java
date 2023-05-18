@@ -16,6 +16,8 @@ public class Invoice {
     @Id
     @Column(name = "invoice_id",columnDefinition = "varchar(10)")
     private String invoiceId;
+    @Column(columnDefinition = "int default 0")
+    private int isDelete;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
