@@ -14,6 +14,8 @@ public class BookingDetail {
     @Column(name = "booking_detail_id",columnDefinition = "varchar(10)")
     private String bookingDetailId;
     private String name;
+    @Column(columnDefinition = "int default 0")
+    private int isDelete;
 
     @ManyToOne
     @JoinColumn(name = "service_id")
