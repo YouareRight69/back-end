@@ -20,6 +20,8 @@ public class Booking {
     private String bookingId;
     @Column(name = "booking_date",columnDefinition = "date")
     private LocalDate bookingDate;
+    @Column(name ="is_delete",  columnDefinition = "int default 0")
+    private int isDelete;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

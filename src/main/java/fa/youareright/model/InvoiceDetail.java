@@ -13,6 +13,8 @@ public class InvoiceDetail {
     @Id
     @Column(name = "invoice_detail_id", columnDefinition = "varchar(10)")
     private String invoiceDetailId;
+    @Column(columnDefinition = "int default 0")
+    private int isDelete;
 
     @ManyToOne
     @JoinColumn(name = "service_id")
