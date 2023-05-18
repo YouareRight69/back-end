@@ -20,9 +20,12 @@ public class Branch {
     private String branchId;
     private String name;
     private String address;
-    private String image;
 
     @OneToMany(mappedBy = "branch")
     @JsonBackReference
     private List<Employee> employeeList;
+
+    @OneToMany(mappedBy = "branch")
+    @JsonBackReference
+    private List<Media> media;
 }
