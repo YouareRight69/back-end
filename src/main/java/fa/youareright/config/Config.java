@@ -1,5 +1,6 @@
 package fa.youareright.config;
 
 public class Config {
-    private String abc;
+    private String hyuen;
+    private  String test;
 }
