@@ -23,7 +23,7 @@ public class HairService {
     @Column(name = "description", columnDefinition = "text")
     private String description;
     private String type;
-    private String image;
+
 
     @OneToMany(mappedBy = "hairService")
     @JsonBackReference
@@ -32,4 +32,8 @@ public class HairService {
     @OneToMany(mappedBy = "hairService")
     @JsonBackReference
     private List<InvoiceDetail> invoiceDetailList;
+
+    @OneToMany(mappedBy = "hairService")
+    @JsonBackReference
+    private List<Media> media;
 }
