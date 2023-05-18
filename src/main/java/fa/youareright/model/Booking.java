@@ -20,8 +20,7 @@ public class Booking {
     private String bookingId;
     @Column(name = "booking_date",columnDefinition = "date")
     private LocalDate bookingDate;
-    @Column(name = "booking_time",columnDefinition = "Time")
-    private LocalTime bookingTime;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
