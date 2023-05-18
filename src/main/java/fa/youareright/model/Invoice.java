@@ -1,13 +1,17 @@
 package fa.youareright.model;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Invoice {
     @Id
     @Column(name = "invoice_id",columnDefinition = "varchar(10)")
@@ -22,6 +26,7 @@ public class Invoice {
     private Booking booking;
 
     @OneToMany(mappedBy = "invoice")
+    @JsonBackReference
     private List<InvoiceDetail> invoiceDetailList;
 
     @Column(name = "invoice_time",columnDefinition = "DateTime")

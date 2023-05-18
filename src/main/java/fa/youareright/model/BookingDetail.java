@@ -2,10 +2,13 @@ package fa.youareright.model;
 
 import javax.persistence.*;
 
-import lombok.Data;
+import lombok.*;
 
 @Entity
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class BookingDetail {
     @Id
     @Column(name = "booking_detail_id",columnDefinition = "varchar(10)")

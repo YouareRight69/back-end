@@ -1,11 +1,14 @@
 package fa.youareright.model;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class InvoiceDetail {
     @Id
     @Column(name = "invoice_detail_id", columnDefinition = "varchar(10)")

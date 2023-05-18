@@ -1,6 +1,6 @@
 package fa.youareright.model;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,7 +8,10 @@ import javax.persistence.Id;
 import java.time.LocalTime;
 
 @Entity
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class WorkingTime {
     @Id
     @Column(name="working_time_id",columnDefinition = "varchar(10)")

@@ -1,13 +1,17 @@
 package fa.youareright.model;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
     @Id
     @Column(name = "user_id", columnDefinition = "varchar(10)")
@@ -34,11 +38,13 @@ public class User {
     private String status;
 
     @OneToMany(mappedBy = "user")
+    @JsonBackReference
     private List<Booking> bookingList;
 
     @OneToOne(mappedBy = "user")
     private Employee employee;
 
     @OneToMany(mappedBy = "user")
+    @JsonBackReference
     private List<Invoice> invoiceList;
 }

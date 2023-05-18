@@ -1,6 +1,7 @@
 package fa.youareright.model;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +10,10 @@ import javax.persistence.OneToMany;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Role {
     @Id
     @Column(name = "role_id", columnDefinition = "varchar(10)")
@@ -17,5 +21,6 @@ public class Role {
     private String name;
 
     @OneToMany(mappedBy = "role")
+    @JsonBackReference
     private List<AccountRole> accountRoleList;
 }

@@ -2,14 +2,18 @@ package fa.youareright.model;
 
 import javax.persistence.*;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Booking {
     @Id
     @Column(name = "booking_id", columnDefinition = "varchar(10)")
@@ -23,9 +27,11 @@ public class Booking {
     private User user;
 
     @OneToMany(mappedBy = "booking")
+    @JsonBackReference
     private List<BookingDetail> bookingDetailList;
 
     @OneToOne(mappedBy = "booking")
+    @JsonBackReference
     private Invoice invoice;
      
 }
