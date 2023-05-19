@@ -27,14 +27,11 @@ public class HairService {
     private int isDelete;
 
     @OneToMany(mappedBy = "hairService")
-    @JsonBackReference
     private List<BookingDetail> bookingDetailList;
 
     @OneToMany(mappedBy = "hairService")
-    @JsonBackReference
     private List<InvoiceDetail> invoiceDetailList;
 
     @OneToMany(mappedBy = "hairService")
-    @JsonBackReference
     private List<Media> media;
 }

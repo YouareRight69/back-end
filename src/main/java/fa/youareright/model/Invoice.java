@@ -20,10 +20,12 @@ public class Invoice {
     private int isDelete;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "user_id")
     private User user;
 
     @OneToOne
+    @JsonBackReference
     @JoinColumn(name = "booking_id")
     private Booking booking;
 
