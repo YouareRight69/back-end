@@ -23,8 +23,7 @@ public class User {
 
     @Column(columnDefinition = "varchar(45)")
     private String fullName;
-    @Column(columnDefinition = "varchar(45)")
-    private String email;
+
     @Column(columnDefinition = "varchar(11)")
     private String phoneNumber;
     @Column(columnDefinition = "varchar(100)")
