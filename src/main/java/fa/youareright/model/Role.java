@@ -21,6 +21,5 @@ public class Role {
     private String name;
 
     @OneToMany(mappedBy = "role")
-    @JsonBackReference
     private List<AccountRole> accountRoleList;
 }
