@@ -1,5 +1,6 @@
 package fa.youareright.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -12,10 +13,12 @@ public class Media {
     private int id;
     private String url;
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "branch_id")
     private Branch branch;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "service_id")
     private HairService hairService;
 

@@ -25,7 +25,6 @@ public class Account {
     @OneToOne(mappedBy = "account")
     private User user;
 
-    @JsonBackReference
     @OneToMany (mappedBy = "account")
     private List<AccountRole> accountRoleList;
 }

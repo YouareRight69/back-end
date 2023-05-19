@@ -28,14 +28,13 @@ public class Booking {
     private User user;
 
     @OneToMany(mappedBy = "booking")
-    @JsonBackReference
     private List<BookingDetail> bookingDetailList;
 
     @OneToOne(mappedBy = "booking")
-    @JsonBackReference
     private Invoice invoice;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "working_time_id")
     private WorkingTime workingTime;
      
