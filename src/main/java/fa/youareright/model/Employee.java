@@ -21,17 +21,17 @@ public class Employee {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "branch_id")
+    @JsonBackReference
     private Branch branch;
 
     @OneToMany(mappedBy = "employee")
-    @JsonBackReference
     private List<BookingDetail> bookingDetailList;
 
     @OneToMany(mappedBy = "employee")
-    @JsonBackReference
     private List<InvoiceDetail> invoiceDetailList;
 }

@@ -18,14 +18,13 @@ public class User {
     private String userId;
 
     @JsonBackReference
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "account_id")
     private Account account;
 
     @Column(columnDefinition = "varchar(45)")
     private String fullName;
-    @Column(columnDefinition = "varchar(45)")
-    private String email;
+
     @Column(columnDefinition = "varchar(11)")
     private String phoneNumber;
     @Column(columnDefinition = "varchar(100)")
@@ -39,13 +38,11 @@ public class User {
     private String status;
 
     @OneToMany(mappedBy = "user")
-    @JsonBackReference
     private List<Booking> bookingList;
 
     @OneToOne(mappedBy = "user")
     private Employee employee;
 
     @OneToMany(mappedBy = "user")
-    @JsonBackReference
     private List<Invoice> invoiceList;
 }

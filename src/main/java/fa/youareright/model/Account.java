@@ -20,10 +20,12 @@ public class Account {
     @Column(name = "password", columnDefinition = "varchar(100)")
     private String password;
 
+    @Column(columnDefinition = "varchar(45)")
+    private String email;
+    @JsonBackReference
     @OneToOne(mappedBy = "account")
     private User user;
 
-    @JsonBackReference
     @OneToMany (mappedBy = "account")
     private List<AccountRole> accountRoleList;
 }

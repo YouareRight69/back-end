@@ -2,6 +2,7 @@ package fa.youareright.model;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 @Entity
@@ -18,15 +19,22 @@ public class BookingDetail {
     private int isDelete;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "service_id")
     private HairService hairService;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "booking_id")
     private Booking booking;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "emp_id")
     private Employee employee;
+
+    @ManyToOne
+    @JoinColumn(name = "working_time_id")
+    private WorkingTime workingTime;
 
 }
