@@ -22,7 +22,8 @@ public class Booking {
     private LocalDate bookingDate;
     @Column(name ="is_delete",  columnDefinition = "int default 0")
     private int isDelete;
-
+    @Column(columnDefinition = "text")
+    private String note;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -33,9 +34,5 @@ public class Booking {
     @OneToOne(mappedBy = "booking")
     private Invoice invoice;
 
-    @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name = "working_time_id")
-    private WorkingTime workingTime;
      
 }
