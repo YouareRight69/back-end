@@ -19,6 +19,7 @@ public class Account {
     private String userName;
     @Column(name = "password", columnDefinition = "varchar(100)")
     private String password;
+
     @Column(columnDefinition = "varchar(45)")
     private String email;
     @JsonBackReference

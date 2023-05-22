@@ -17,6 +17,7 @@ public class User {
     @Column(name = "user_id", columnDefinition = "varchar(10)")
     private String userId;
 
+    @JsonBackReference
     @OneToOne
     @JoinColumn(name = "account_id")
     private Account account;
@@ -40,7 +41,6 @@ public class User {
     private List<Booking> bookingList;
 
     @OneToOne(mappedBy = "user")
-    @JsonBackReference
     private Employee employee;
 
     @OneToMany(mappedBy = "user")

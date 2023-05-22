@@ -33,4 +33,8 @@ public class BookingDetail {
     @JoinColumn(name = "emp_id")
     private Employee employee;
 
+    @ManyToOne
+    @JoinColumn(name = "working_time_id")
+    private WorkingTime workingTime;
+
 }
