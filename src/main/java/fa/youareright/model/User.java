@@ -17,7 +17,8 @@ public class User {
     @Column(name = "user_id", columnDefinition = "varchar(10)")
     private String userId;
 
-    @OneToOne
+    @JsonBackReference
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id")
     private Account account;
 

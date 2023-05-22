@@ -19,7 +19,7 @@ public class Account {
     private String userName;
     @Column(name = "password", columnDefinition = "varchar(100)")
     private String password;
-    @JsonBackReference
+
     @OneToOne(mappedBy = "account")
     private User user;
 
