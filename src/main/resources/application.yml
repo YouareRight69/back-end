@@ -1,0 +1,40 @@
+app:
+  jwt:
+    secret: namfanmu2828
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: Namfanmu281999
+    url: jdbc:mysql://localhost:3306/youareright
+    username: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+    show-sql: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 174964802788-bupsp77at56ahfnk3u739grvovqodbud.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+            - email
+            - profile
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: sportparadiseshop28@gmail.com
+    password: mvadqaupegvdaugc
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            
+          
