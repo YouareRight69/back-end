@@ -17,6 +17,7 @@ public class User {
     @Column(name = "user_id", columnDefinition = "varchar(10)")
     private String userId;
 
+    @JsonBackReference
     @OneToOne
     @JoinColumn(name = "account_id")
     private Account account;
