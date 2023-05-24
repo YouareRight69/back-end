@@ -8,18 +8,35 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class HairServiceServiceImpl implements HairServiceService {
     @Autowired
     HairServiceRepository hairServiceRepository;
 
-    @Override
-    public Page<HairService> findAll(Pageable pageable, String keyword) {
-        return hairServiceRepository.findAll(pageable, keyword);
+//    @Override
+//    public Page<HairService> findAll(Pageable pageable, String keyword) {
+//        return hairServiceRepository.findAll(pageable, keyword);
+//    }
+
+    public Page<HairService> listAll(String condition, Pageable pageable) {
+        return hairServiceRepository.findAllByService(condition, condition, pageable);
     }
 
     @Override
     public void save(HairService hairService) {
         hairServiceRepository.save(hairService);
     }
+
+    @Override
+    public Optional<HairService> findById(String serviceId) {
+        return hairServiceRepository.findById(serviceId);
+    }
+
+    @Override
+    public void delete(String serviceId) {
+        hairServiceRepository.deleteById(serviceId);
+    }
+
 }
