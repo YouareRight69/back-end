@@ -1,5 +1,6 @@
 package fa.youareright.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -26,6 +27,7 @@ public class HairService {
     private int isDelete;
 
     @OneToMany(mappedBy = "hairService")
+    @JsonBackReference
     private List<BookingDetail> bookingDetailList;
 
     @OneToMany(mappedBy = "hairService")

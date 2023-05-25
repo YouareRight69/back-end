@@ -8,7 +8,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+
 import java.util.Optional;
+
+import java.util.List;
+
 
 @Service
 public class HairServiceServiceImpl implements HairServiceService {
@@ -30,6 +34,7 @@ public class HairServiceServiceImpl implements HairServiceService {
     }
 
     @Override
+
     public Optional<HairService> findById(String serviceId) {
         return hairServiceRepository.findById(serviceId);
     }
@@ -37,6 +42,11 @@ public class HairServiceServiceImpl implements HairServiceService {
     @Override
     public void delete(String serviceId) {
         hairServiceRepository.deleteById(serviceId);
+    }
+
+
+    public List<HairService> findList() {
+        return hairServiceRepository.findAll();
     }
 
 }

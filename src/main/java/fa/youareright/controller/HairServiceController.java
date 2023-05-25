@@ -68,6 +68,7 @@ public class HairServiceController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
     @GetMapping("/{serviceId}")
     public ResponseEntity<HairService> findById(@PathVariable String serviceId) {
         Optional<HairService> hairService = hairServiceService.findById(serviceId);
@@ -114,5 +115,11 @@ public class HairServiceController {
 
         hairServiceService.delete(serviceId);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<?> getListService() {
+        return new ResponseEntity<>(hairServiceService.findList(), HttpStatus.OK);
+
     }
 }
