@@ -17,15 +17,23 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin("http://localhost:3000")
 @RequestMapping("/api/admin/branch")
 public class BranchRestController {
     @Autowired
     private BranchRepository branchRepository;
+
     @GetMapping("")
-    public ResponseEntity<?> getFormBooking() {
+    public ResponseEntity<?> getFormBranch() {
         List<Branch> branchList = branchRepository.findAll();
 
         return new ResponseEntity<>(branchList, HttpStatus.OK);
     }
+
+//    @GetMapping("")
+//    public ResponseEntity<?> getFormDeleteBranch() {
+//        List<Branch> branchList = branchRepository.findAll();
+//
+//        return new ResponseEntity<>(branchList, HttpStatus.OK);
+//    }
 }
