@@ -1,7 +1,10 @@
 package fa.youareright.controller;
 
+import fa.youareright.dto.BookingDTO;
 import fa.youareright.dto.HairServiceDto;
-import fa.youareright.model.HairService;
+import fa.youareright.dto.ServiceDto;
+import fa.youareright.model.*;
+import fa.youareright.repository.MediaRepository;
 import fa.youareright.service.HairServiceService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,9 @@ public class HairServiceController {
     @Autowired
     HairServiceService hairServiceService;
 
+    @Autowired
+    MediaRepository mediaRepository;
+
 //    @GetMapping("")
 //    public ResponseEntity<Page<HairService>> findAll(@PageableDefault(value = 5) Pageable pageable, @RequestParam Optional<String> keyword) {
 //        Page<HairService> hairServices = hairServiceService.findAll(pageable, keyword.orElse(""));
@@ -53,7 +59,10 @@ public class HairServiceController {
         }
 
         HairService hairService = new HairService();
+        Media media = new Media();
+        BeanUtils.copyProperties(hairServiceDto, media);
         BeanUtils.copyProperties(hairServiceDto, hairService);
+
         this.hairServiceService.save(hairService);
 
         return new ResponseEntity<>(HttpStatus.OK);
