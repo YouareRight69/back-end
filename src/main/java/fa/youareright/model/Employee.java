@@ -15,18 +15,19 @@ public class Employee {
     @Id
     @Column(name = "emp_id",columnDefinition = "varchar(10)")
     private  String employeeId;
+    
     @Column(columnDefinition = "int default 0")
     private int isDelete;
     private String type;
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    @JsonBackReference
+//    @JsonBackReference
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "branch_id")
-    @JsonBackReference
+//    @JsonBackReference
     private Branch branch;
 
     @OneToMany(mappedBy = "employee")

@@ -39,9 +39,11 @@ import fa.youareright.dto.RegisterInfo;
 import fa.youareright.dto.UpdateInfoDTO;
 import fa.youareright.dto.UserAccountDTO;
 import fa.youareright.model.Account;
+import fa.youareright.model.Employee;
 import fa.youareright.model.Role;
 import fa.youareright.model.User;
 import fa.youareright.repository.AccountRepository;
+import fa.youareright.repository.EmployeeRepository;
 import fa.youareright.service.AccountService;
 import fa.youareright.service.SendMailService;
 import fa.youareright.service.UserService;
@@ -52,6 +54,9 @@ public class UserRestController {
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
+
+	@Autowired
+	private EmployeeRepository employeeRepository;
 
 	@Autowired
 	private AccountRepository accountRepository;
@@ -238,6 +243,13 @@ public class UserRestController {
 		Map<String, Object> response = new HashMap<>();
 		response.put("msg", "Update successfully.");
 		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/allEmp")
+	public ResponseEntity<List<Employee>> getAllEmp() {
+		List<Employee> listAll = employeeRepository.listAll();
+		ResponseEntity<List<Employee>> response = ResponseEntity.ok(listAll);
+		return response;
 	}
 
 }

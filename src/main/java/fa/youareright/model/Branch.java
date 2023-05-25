@@ -24,6 +24,7 @@ public class Branch {
     private int isDelete;
 
     @OneToMany(mappedBy = "branch")
+    @JsonBackReference
     private List<Employee> employeeList;
 
     @OneToMany(mappedBy = "branch")
