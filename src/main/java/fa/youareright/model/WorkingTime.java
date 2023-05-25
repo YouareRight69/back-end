@@ -23,7 +23,6 @@ public class WorkingTime {
     private LocalTime timeZone;
     private String dateType;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "workingTime")
     private List<BookingDetail> bookingDetailList;
 

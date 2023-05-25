@@ -45,4 +45,8 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Invoice> invoiceList;
+
+    public User(String userId) {
+        this.userId = userId;
+    }
 }

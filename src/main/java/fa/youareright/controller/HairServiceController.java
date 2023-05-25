@@ -49,4 +49,9 @@ public class HairServiceController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("/list")
+    public ResponseEntity<?> getListService() {
+        return  new ResponseEntity<>(hairServiceService.findList(),HttpStatus.OK);
+    }
 }

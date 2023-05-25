@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class HairServiceServiceImpl implements HairServiceService {
     @Autowired
@@ -21,5 +23,10 @@ public class HairServiceServiceImpl implements HairServiceService {
     @Override
     public void save(HairService hairService) {
         hairServiceRepository.save(hairService);
+    }
+
+    @Override
+    public List<HairService> findList() {
+        return hairServiceRepository.findAll();
     }
 }
