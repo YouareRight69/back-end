@@ -10,12 +10,18 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface HairServiceRepository  extends JpaRepository<HairService, String> {
+public interface HairServiceRepository extends JpaRepository<HairService, String> {
 
-    @Query(value = "select * " +
-            "from hair_service " +
-            "where name like %:keyword% and " +
-            "description like %:keyword% " ,
+//    @Query(value = "select * " +
+//            "from hair_service " +
+//            "where name like %:keyword% and " +
+//            "description like %:keyword% " ,
+//            nativeQuery = true)
+//    Page<HairService> findAll(Pageable pageable, @Param("keyword") String keyword);
+
+    @Query(value = "select * from hair_service where (name like concat('%',:name,'%') or description like concat('%',:description,'%'))",
             nativeQuery = true)
-    Page<HairService> findAll(Pageable pageable, @Param("keyword") String keyword);
+    Page<HairService> findAllByService(@Param("name") String name,
+                                       @Param("description") String description,
+                                       Pageable pageable);
 }
