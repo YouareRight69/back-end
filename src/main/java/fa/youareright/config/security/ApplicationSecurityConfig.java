@@ -62,6 +62,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 				.userService(customerOAuth2UserService);
 
 		http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+		http.cors(); 
 	}
 
 }

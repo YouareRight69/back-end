@@ -21,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,6 +36,7 @@ import fa.youareright.dto.ForgotChangePassword;
 import fa.youareright.dto.MailInfoDTO;
 import fa.youareright.dto.OTP;
 import fa.youareright.dto.RegisterInfo;
+import fa.youareright.dto.UpdateInfoDTO;
 import fa.youareright.dto.UserAccountDTO;
 import fa.youareright.model.Account;
 import fa.youareright.model.Role;
@@ -45,7 +47,7 @@ import fa.youareright.service.SendMailService;
 import fa.youareright.service.UserService;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class UserRestController {
 
 	@Autowired
@@ -194,7 +196,7 @@ public class UserRestController {
 		String passEncode = passwordEncoder.encode(info.getPassword());
 
 		UserAccountDTO userAcc = new UserAccountDTO(userId, null, info.getFullname(), info.getEmail(),
-				info.getUsername(), passEncode, null, null, null, null, null, null);
+				info.getUsername(), passEncode, info.getPhoneNumber(), null, "Active", null, null, null);
 
 		Account acc = new Account();
 		User user = new User();
@@ -211,6 +213,30 @@ public class UserRestController {
 
 		Map<String, Object> response = new HashMap<>();
 		response.put("msg", "Register successfully.");
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/updateInfo")
+	public ResponseEntity<?> getUpdateInfo(@RequestParam Integer accountId) {
+		User user = userService.findByAccountId(accountId);
+		Map<String, Object> response = new HashMap<>();
+		response.put("userId", user.getUserId());
+		response.put("fullname", user.getFullName());
+		response.put("phoneNumber", user.getPhoneNumber());
+		response.put("address", user.getAddress());
+		response.put("gender", user.getGender());
+		response.put("avatar", user.getAvatar());
+		response.put("dob", user.getDateOfBirth());
+		response.put("email", user.getAccount().getEmail());
+		return ResponseEntity.ok(response);
+	}
+
+	@PostMapping("/updateInfo")
+	public ResponseEntity<?> updateInfo(@RequestBody UpdateInfoDTO info) {
+		userService.updateInfo(info);
+
+		Map<String, Object> response = new HashMap<>();
+		response.put("msg", "Update successfully.");
 		return ResponseEntity.ok(response);
 	}
 

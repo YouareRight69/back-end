@@ -3,6 +3,7 @@ package fa.youareright.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import fa.youareright.dto.UpdateInfoDTO;
 import fa.youareright.model.User;
 import fa.youareright.repository.UserRepository;
 import fa.youareright.service.UserService;
@@ -33,6 +34,17 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void save(User user) {
 		userRepository.save(user);
+	}
+
+	@Override
+	public User findByAccountId(Integer accountId) {
+		return userRepository.findByAccountId(accountId).get();
+	}
+
+	@Override
+	public void updateInfo(UpdateInfoDTO info) {
+		userRepository.updateUser(info.getAddress(), info.getAvatar(), info.getDob(), info.getFullName(),
+				info.getPhoneNumber(), info.getUserId());
 	}
 
 }
