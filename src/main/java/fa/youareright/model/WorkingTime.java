@@ -1,5 +1,6 @@
 package fa.youareright.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -23,6 +24,6 @@ public class WorkingTime {
     private String dateType;
 
     @OneToMany(mappedBy = "workingTime")
-    private List<Booking> bookingList;
+    private List<BookingDetail> bookingDetailList;
 
 }

@@ -1,12 +1,14 @@
 package fa.youareright.model;
 
-import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.*;
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 @Entity
@@ -16,26 +18,34 @@ import java.util.List;
 @NoArgsConstructor
 public class Booking {
     @Id
+    @GeneratedValue(generator = "auto-generator")
+    @GenericGenerator(name = "auto-generator",
+            parameters = @Parameter(name = "prefix", value = "BKG"),
+            strategy = "fa.youareright.utils.MyGenerator")
     @Column(name = "booking_id", columnDefinition = "varchar(10)")
     private String bookingId;
-    @Column(name = "booking_date",columnDefinition = "date")
+    @Column(name = "booking_date", columnDefinition = "date")
     private LocalDate bookingDate;
-    @Column(name ="is_delete",  columnDefinition = "int default 0")
+    @Column(name = "is_delete", columnDefinition = "int default 0")
     private int isDelete;
+    @Column(columnDefinition = "text")
+    private String note;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "user_id")
     private User user;
-
+    @JsonBackReference
     @OneToMany(mappedBy = "booking")
     private List<BookingDetail> bookingDetailList;
 
     @OneToOne(mappedBy = "booking")
     private Invoice invoice;
 
-    @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name = "working_time_id")
-    private WorkingTime workingTime;
-     
+    public Booking(LocalDate bookingDate, int isDelete, String note, User user) {
+        this.bookingDate = bookingDate;
+        this.isDelete = isDelete;
+        this.note = note;
+        this.user = user;
+    }
 }

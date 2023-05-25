@@ -134,4 +134,5 @@ public class Account implements UserDetails {
 	public void addRole(Role role) {
 		this.roles.add(role);
 	}
+
 }

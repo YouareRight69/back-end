@@ -2,11 +2,9 @@ package fa.youareright.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -16,6 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 public class HairService {
     @Id
+    @GeneratedValue(generator = "auto-generator")
+    @GenericGenerator(name = "auto-generator", parameters = @Parameter(name = "prefix", value = "SER"), strategy = "fa.youareright.utils.AutoGeneration")
     @Column(name = "service_id",columnDefinition = "varchar(10)")
     private String serviceId;
     private String name;
@@ -27,6 +27,7 @@ public class HairService {
     private int isDelete;
 
     @OneToMany(mappedBy = "hairService")
+    @JsonBackReference
     private List<BookingDetail> bookingDetailList;
 
     @OneToMany(mappedBy = "hairService")

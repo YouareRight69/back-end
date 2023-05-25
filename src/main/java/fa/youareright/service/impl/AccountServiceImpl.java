@@ -78,5 +78,10 @@ public class AccountServiceImpl implements AccountService {
 		}
 		return isExact;
 	}
+	
+	@Override
+    public List<Account> findAll() {
+        return accountRepository.findAll();
+    }
 
 }

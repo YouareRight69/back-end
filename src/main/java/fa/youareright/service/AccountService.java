@@ -27,4 +27,6 @@ public interface AccountService {
 
 	boolean isOtpExact(ConfirmOtp confirmOtp, List<OTP> otps);
 
+	List<Account> findAll();
+
 }

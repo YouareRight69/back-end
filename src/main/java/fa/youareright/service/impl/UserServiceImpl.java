@@ -1,10 +1,13 @@
 package fa.youareright.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import fa.youareright.dto.UpdateInfoDTO;
 import fa.youareright.model.User;
+import fa.youareright.repository.AccountRepository;
 import fa.youareright.repository.UserRepository;
 import fa.youareright.service.UserService;
 
@@ -32,7 +35,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void save(User user) {
+	public void saveNamNB6(User user) {
 		userRepository.save(user);
 	}
 
@@ -47,4 +50,18 @@ public class UserServiceImpl implements UserService {
 				info.getPhoneNumber(), info.getUserId());
 	}
 
+
+    @Autowired
+    AccountRepository accountRepository;
+
+    @Override
+    public Page<User> findAll(Pageable pageable, String keyword) {
+        return userRepository.findAll(pageable, keyword);
+    }
+
+    @Override
+    public void save(User user) {
+        user.setAccount(user.getAccount());
+        userRepository.save(user);
+    }
 }
