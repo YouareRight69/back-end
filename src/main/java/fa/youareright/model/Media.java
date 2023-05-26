@@ -17,10 +17,8 @@ public class Media {
     @JoinColumn(name = "branch_id")
     private Branch branch;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonBackReference
     @JoinColumn(name = "service_id")
     private HairService hairService;
-
-
 }

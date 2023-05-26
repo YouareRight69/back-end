@@ -1,8 +1,6 @@
 package fa.youareright.controller;
 
-import fa.youareright.dto.BookingDTO;
 import fa.youareright.dto.HairServiceDto;
-import fa.youareright.dto.ServiceDto;
 import fa.youareright.model.*;
 import fa.youareright.repository.MediaRepository;
 import fa.youareright.service.HairServiceService;
@@ -10,18 +8,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -35,15 +27,6 @@ public class HairServiceController {
     @Autowired
     MediaRepository mediaRepository;
 
-//    @GetMapping("")
-//    public ResponseEntity<Page<HairService>> findAll(@PageableDefault(value = 5) Pageable pageable, @RequestParam Optional<String> keyword) {
-//        Page<HairService> hairServices = hairServiceService.findAll(pageable, keyword.orElse(""));
-//        if (hairServices.isEmpty()) {
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        }
-//        return new ResponseEntity<>(hairServices, HttpStatus.OK);
-//    }
-
     @GetMapping("")
     public ResponseEntity<Page<HairService>> findAllByCondition(
             @RequestParam(value = "c", defaultValue = "") String condition,
@@ -52,22 +35,26 @@ public class HairServiceController {
     }
 
     @PostMapping("")
-    public ResponseEntity<List<FieldError>> create(@RequestBody @Valid HairServiceDto hairServiceDto, BindingResult bindingResult) {
+    public ResponseEntity<?> create(@RequestBody @Valid HairServiceDto hairServiceDto, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(bindingResult.getFieldErrors(), HttpStatus.NOT_ACCEPTABLE);
         }
 
         HairService hairService = new HairService();
-        Media media = new Media();
-        BeanUtils.copyProperties(hairServiceDto, media);
         BeanUtils.copyProperties(hairServiceDto, hairService);
-
         this.hairServiceService.save(hairService);
+
+        for (String url : hairServiceDto.getMedia()) {
+            Media media = new Media();
+            BeanUtils.copyProperties(hairServiceDto, media, "media");
+            media.setUrl(url);
+            media.setHairService(hairService);
+            mediaRepository.save(media);
+        }
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 
     @GetMapping("/{serviceId}")
     public ResponseEntity<HairService> findById(@PathVariable String serviceId) {
@@ -98,6 +85,7 @@ public class HairServiceController {
         currentHairService.get().setPrice(hairServiceDto.getPrice());
         currentHairService.get().setDescription(hairServiceDto.getDescription());
         currentHairService.get().setType(hairServiceDto.getType());
+        currentHairService.get().setMedia(hairServiceDto.getMedia());
 
         hairServiceService.save(currentHairService.get());
 
