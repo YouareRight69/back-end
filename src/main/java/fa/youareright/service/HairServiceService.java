@@ -1,6 +1,8 @@
 package fa.youareright.service;
 
+import fa.youareright.dto.HairServiceDto;
 import fa.youareright.model.HairService;
+import fa.youareright.model.Media;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -10,12 +12,9 @@ import java.util.List;
 
 public interface HairServiceService {
 
-//    Page<HairService> findAll(Pageable pageable, @Param("keyword") String keyword);
-
     Page<HairService> listAll(String condition, Pageable pageable);
 
     void save(HairService hairService);
-
 
     Optional<HairService> findById(String serviceId);
 
@@ -24,4 +23,5 @@ public interface HairServiceService {
 
     List<HairService> findList();
 
+    HairService get(String serviceId);
 }

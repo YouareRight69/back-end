@@ -16,4 +16,6 @@ public class BookingDTO {
     private List<String> serviceList;
     private String styleId;
     private String skinnerId;
+    private String customerName;
+    private String branch;
 }

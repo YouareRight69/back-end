@@ -28,5 +28,6 @@ public class HairServiceDto {
     @NotBlank(message = "Vui lòng không để trống")
     private String type;
     private int isDelete;
-    private List<Media> media;
+    private List<String> media;
+
 }

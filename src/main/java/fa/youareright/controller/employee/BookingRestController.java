@@ -3,6 +3,8 @@ package fa.youareright.controller.employee;
 import fa.youareright.dto.BookingDTO;
 import fa.youareright.model.*;
 import fa.youareright.repository.*;
+import fa.youareright.service.BookingService;
+import fa.youareright.service.impl.BookingServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,10 +33,12 @@ public class BookingRestController {
     private BookingRepository bookingRepository;
     @Autowired
     private HairServiceRepository hairServiceRepository;
+    @Autowired
+    private BookingService bookingService;
 
     @GetMapping("/list-branch")
     public ResponseEntity<?> getListBranch() {
-        return new ResponseEntity<>(branchRepository.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(branchRepository.findByIsDelete(0), HttpStatus.OK);
     }
 
     @GetMapping("/list-employee-of-branch")
@@ -59,33 +63,8 @@ public class BookingRestController {
 
     @PostMapping("create")
     public ResponseEntity<?> createBooking(@RequestBody BookingDTO bookingDTO) {
-
-        Booking booking = bookingRepository
-                .save(new Booking(LocalDate.parse(bookingDTO.getBookingDate()), bookingDTO.getIsDelete(), bookingDTO.getNote(),
-                        userRepository.findById(bookingDTO.getUserId()).orElse(null)));
-        bookingDTO.getServiceList().stream().forEach((item) -> {
-            if (hairServiceRepository.findById(item).orElse(null).getType()
-                    .equals(employeeRepository.findById(bookingDTO.getStyleId()).orElse(null).getType())) {
-                bookingDetailRepository.save(new BookingDetail(userRepository.findById(bookingDTO.getUserId())
-                        .orElse(null).getFullName(),
-                        bookingDTO.getIsDelete(),
-                        hairServiceRepository.findById(item).orElse(null),
-                        booking,
-                        employeeRepository.findById(bookingDTO.getStyleId()).orElse(null),
-                        workingTimeRepository.findById(bookingDTO.getWorkTimeId()).orElse(null)));
-            } else
-                bookingDetailRepository.save(new BookingDetail(
-                        userRepository.findById(bookingDTO.getUserId()).orElse(null).getFullName(),
-                        bookingDTO.getIsDelete(),
-                        hairServiceRepository.findById(item).orElse(null), booking,
-                        employeeRepository.findById(bookingDTO.getSkinnerId()).orElse(null),
-                        workingTimeRepository.findById(bookingDTO.getWorkTimeId()).orElse(null)));
-        });
+        Booking booking = bookingService.saveBookingAndBookingDetail(bookingDTO);
         return new ResponseEntity<>(booking, HttpStatus.OK);
     }
 
-    @GetMapping("booking-get-exam")
-    public ResponseEntity<?> getBooking() {
-        return new ResponseEntity<>(bookingRepository.findAll(), HttpStatus.OK);
-    }
 }

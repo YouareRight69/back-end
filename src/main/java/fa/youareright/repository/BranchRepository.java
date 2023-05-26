@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface BranchRepository extends JpaRepository<Branch, String> {
 
     @Query(value = "select * from branch where (name like concat('%',:name,'%') or address like concat('%',:address,'%')) AND is_delete = 0",
@@ -21,5 +23,5 @@ public interface BranchRepository extends JpaRepository<Branch, String> {
     @Transactional
     void updateIsDelete(@Param("branchId") String branchId);
 
-
+    List<Branch> findByIsDelete(Integer isDelete);
 }
