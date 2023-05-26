@@ -35,4 +35,7 @@ public class HairService {
 
     @OneToMany(mappedBy = "hairService")
     private List<Media> media;
+
+    public void setMedia(List<String> media) {
+    }
 }
