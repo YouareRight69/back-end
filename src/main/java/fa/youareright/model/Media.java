@@ -12,7 +12,8 @@ public class Media {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String url;
-    @ManyToOne
+
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonBackReference
     @JoinColumn(name = "branch_id")
     private Branch branch;
