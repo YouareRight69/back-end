@@ -29,16 +29,14 @@ public class HairServiceServiceImpl implements HairServiceService {
     }
 
     @Override
-
     public Optional<HairService> findById(String serviceId) {
         return hairServiceRepository.findById(serviceId);
     }
 
     @Override
     public void delete(String serviceId) {
-        hairServiceRepository.deleteById(serviceId);
+        hairServiceRepository.delete(serviceId);
     }
-
 
     public List<HairService> findList() {
         return hairServiceRepository.findAll();
@@ -48,6 +46,4 @@ public class HairServiceServiceImpl implements HairServiceService {
     public HairService get(String serviceId) {
         return hairServiceRepository.findById(serviceId).orElse(new HairService());
     }
-
-
 }
