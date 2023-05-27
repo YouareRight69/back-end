@@ -29,4 +29,8 @@ public class Branch {
 
     @OneToMany(mappedBy = "branch")
     private List<Media> media;
+
+    public Branch(String branchId) {
+        this.branchId = branchId;
+    }
 }
