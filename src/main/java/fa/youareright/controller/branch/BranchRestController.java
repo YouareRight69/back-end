@@ -1,10 +1,13 @@
 package fa.youareright.controller.branch;
 
 import fa.youareright.dto.BranchMediaDTO;
+import fa.youareright.dto.HairServiceDto;
 import fa.youareright.model.Branch;
+import fa.youareright.model.HairService;
 import fa.youareright.model.Media;
 import fa.youareright.repository.MediaRepository;
 import fa.youareright.service.BranchService;
+import fa.youareright.service.MediaService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +31,9 @@ public class BranchRestController {
 
     @Autowired
     MediaRepository mediaRepository;
+
+    @Autowired
+    MediaService mediaService;
 
     @GetMapping("")
     public ResponseEntity<Page<Branch>> findAllByCondition(
@@ -55,6 +62,36 @@ public class BranchRestController {
         }
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PatchMapping("/{branchId}")
+    public ResponseEntity<Branch> update(@PathVariable String branchId,
+                                              @Valid @RequestBody BranchMediaDTO branchMediaDTO,
+                                              BindingResult bindingResult) {
+        Optional<Branch> currentBranch = branchService.findById(branchId);
+
+        if (bindingResult.hasFieldErrors()) {
+            return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        }
+
+        if (!currentBranch.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        currentBranch.get().setBranchId(branchMediaDTO.getBranchId());
+        currentBranch.get().setName(branchMediaDTO.getName());
+        currentBranch.get().setAddress(branchMediaDTO.getAddress());
+
+        for (String url : branchMediaDTO.getMedia()) {
+            Media media = new Media();
+            media.setUrl(url);
+            media.setBranch(currentBranch.get());
+            mediaRepository.save(media);
+        }
+
+        branchService.save(currentBranch.get());
+
+        return new ResponseEntity<>(currentBranch.get(), HttpStatus.OK);
     }
 
     @GetMapping("/{branchId}")
