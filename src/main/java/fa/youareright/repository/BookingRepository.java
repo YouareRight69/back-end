@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.MimeType;
+
 
 @Transactional
 public interface BookingRepository  extends JpaRepository<Booking, String> , JpaSpecificationExecutor<Booking> {
@@ -19,4 +19,6 @@ public interface BookingRepository  extends JpaRepository<Booking, String> , Jpa
     @Modifying
     @Query(value="update Booking b set b.isDelete = 1 where b.bookingId = :bookingId")
     int deleteBooking(@Param("bookingId") String bookingId );
+
+
 }

@@ -1,17 +1,17 @@
 package fa.youareright.controller.employee;
 
 import fa.youareright.dto.BookingDTO;
-import fa.youareright.model.*;
+import fa.youareright.model.Booking;
+import fa.youareright.model.HairService;
 import fa.youareright.repository.*;
 import fa.youareright.service.BookingService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.time.LocalDate;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,22 +38,22 @@ public class BookingRestController {
     @Autowired
     private BookingService bookingService;
 
-    @GetMapping("/list-branch")
+    @GetMapping("info/list-branch")
     public ResponseEntity<?> getListBranch() {
         return new ResponseEntity<>(branchRepository.findByIsDelete(0), HttpStatus.OK);
     }
 
-    @GetMapping("/list-employee-of-branch")
+    @GetMapping("info/list-employee-of-branch")
     public ResponseEntity<?> getEmployeeOfBranch(@RequestParam(name = "branchId") String branchId) {
         return new ResponseEntity<>(userRepository.getListEmployee(branchId), HttpStatus.OK);
     }
 
-    @GetMapping("/working-time")
+    @GetMapping("info/working-time")
     public ResponseEntity<?> getWorkingTimeList() {
         return new ResponseEntity<>(workingTimeRepository.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping("busy-list")
+    @GetMapping("info/busy-list")
     public ResponseEntity<?> getBusyListOfEmployee(@RequestParam("employeeId") String employeeId, @RequestParam("day") String day) {
         List<String> busyList;
         busyList = bookingDetailRepository.getBusyTimeOfEmployee(LocalDate.parse(day), employeeId)
@@ -64,12 +64,14 @@ public class BookingRestController {
     }
 
     @PostMapping("create")
+    @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST"})
     public ResponseEntity<?> createBooking(@RequestBody BookingDTO bookingDTO) {
         Booking booking = bookingService.saveBookingAndBookingDetail(bookingDTO);
         return new ResponseEntity<>(booking, HttpStatus.OK);
     }
 
     @GetMapping("/get-booking")
+    @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST"})
     public ResponseEntity<?> getBookingInfo(@RequestParam("bookingId") String bookingId) {
         Booking booking = bookingRepository.findById(bookingId).orElse(null);
         List<HairService> listService = booking.getBookingDetailList().stream().map((item)->item.getHairService()).
