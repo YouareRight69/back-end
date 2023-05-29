@@ -30,6 +30,7 @@ public class Employee {
     private Branch branch;
 
     @OneToMany(mappedBy = "employee")
+    @JsonBackReference
     private List<BookingDetail> bookingDetailList;
 
     @OneToMany(mappedBy = "employee")

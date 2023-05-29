@@ -30,6 +30,7 @@ public class Branch {
     @OneToMany(mappedBy = "branch")
     private List<Media> media;
 
-    public void setMedia(List<String> media) {
-    }
+   @OneToMany(mappedBy = "branch")
+   @JsonBackReference
+    private List<Booking> bookingList;
 }

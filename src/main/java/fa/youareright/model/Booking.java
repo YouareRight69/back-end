@@ -35,17 +35,31 @@ public class Booking {
     @JsonBackReference
     @JoinColumn(name = "user_id")
     private User user;
-    @JsonBackReference
+
     @OneToMany(mappedBy = "booking")
     private List<BookingDetail> bookingDetailList;
 
     @OneToOne(mappedBy = "booking")
     private Invoice invoice;
 
-    public Booking(LocalDate bookingDate, int isDelete, String note, User user) {
+    @ManyToOne
+
+    @JoinColumn(name= "branch_id")
+    private Branch branch;
+
+    public Booking(LocalDate bookingDate, int isDelete, String note, User user, Branch branch) {
         this.bookingDate = bookingDate;
         this.isDelete = isDelete;
         this.note = note;
         this.user = user;
+        this.branch= branch;
+    }
+    public Booking(String bookingId,LocalDate bookingDate, int isDelete, String note, User user, Branch branch) {
+        this.bookingDate = bookingDate;
+        this.isDelete = isDelete;
+        this.note = note;
+        this.user = user;
+        this.branch= branch;
+        this.bookingId= bookingId;
     }
 }
