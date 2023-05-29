@@ -4,7 +4,7 @@ import fa.youareright.dto.BookingDTO;
 import fa.youareright.model.*;
 import fa.youareright.repository.*;
 import fa.youareright.service.BookingService;
-import fa.youareright.service.impl.BookingServiceImpl;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -66,5 +68,35 @@ public class BookingRestController {
         Booking booking = bookingService.saveBookingAndBookingDetail(bookingDTO);
         return new ResponseEntity<>(booking, HttpStatus.OK);
     }
+
+    @GetMapping("/get-booking")
+    public ResponseEntity<?> getBookingInfo(@RequestParam("bookingId") String bookingId) {
+        Booking booking = bookingRepository.findById(bookingId).orElse(null);
+        List<HairService> listService = booking.getBookingDetailList().stream().map((item)->item.getHairService()).
+               filter((item)-> !item.getServiceId().equals("SER011")).collect(Collectors.toList());
+        Map<String, Object> response = new HashMap<>();
+        String stylist = bookingDetailRepository.getStylist(bookingId).get(0).getEmployee().getEmployeeId();
+        String skinner= bookingDetailRepository.getSkinnerlist(bookingId).get(0).getEmployee().getEmployeeId();
+
+        response.put("branch",booking.getBranch().getBranchId());
+        response.put("bookingId",booking.getBookingId());
+        response.put("bookingDate",booking.getBookingDate());
+        response.put("isDelete",booking.getIsDelete());
+        response.put("serviceList",listService);
+        response.put("styleId",stylist);
+        response.put("skinnerId",skinner);
+        response.put("userId",booking.getUser().getUserId());
+        response.put("workTimeId",bookingDetailRepository.getStylist(bookingId).get(0).getWorkingTime().getWorkingTimeId());
+        response.put("note",booking.getNote());
+
+        return  new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @PostMapping("update/{bookingId}")
+    public ResponseEntity<?> createBooking(@RequestBody BookingDTO bookingDTO, @PathVariable("bookingId") String bookingId) {
+        Booking booking = bookingService.updateBookingAndBookingDetail(bookingDTO,bookingId);
+        return new ResponseEntity<>(booking, HttpStatus.OK);
+    }
+
 
 }

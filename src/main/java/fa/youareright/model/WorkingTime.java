@@ -24,6 +24,7 @@ public class WorkingTime {
     private String dateType;
 
     @OneToMany(mappedBy = "workingTime")
+    @JsonBackReference
     private List<BookingDetail> bookingDetailList;
 
 }
