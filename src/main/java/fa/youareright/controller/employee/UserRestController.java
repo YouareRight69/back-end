@@ -213,7 +213,7 @@ public class UserRestController {
 		String lastUserId = userService.getLastUserId();
 		String userId = null;
 		if (lastUserId == null) {
-			userId = "USE001";
+			userId = "USR001";
 		} else {
 			userId = userService.getNextId(lastUserId);
 		}
