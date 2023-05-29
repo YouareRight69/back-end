@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class BranchMediaDTO {
 
-    private String serviceId;
+    private String branchId;
 
     @NotBlank(message = "Vui lòng không để trống")
     private String name;
