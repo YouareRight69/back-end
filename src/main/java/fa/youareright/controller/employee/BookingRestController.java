@@ -3,6 +3,8 @@ package fa.youareright.controller.employee;
 import fa.youareright.dto.BookingDTO;
 import fa.youareright.model.*;
 import fa.youareright.repository.*;
+import fa.youareright.service.BookingService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -31,10 +35,12 @@ public class BookingRestController {
     private BookingRepository bookingRepository;
     @Autowired
     private HairServiceRepository hairServiceRepository;
+    @Autowired
+    private BookingService bookingService;
 
     @GetMapping("/list-branch")
     public ResponseEntity<?> getListBranch() {
-        return new ResponseEntity<>(branchRepository.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(branchRepository.findByIsDelete(0), HttpStatus.OK);
     }
 
     @GetMapping("/list-employee-of-branch")
@@ -59,33 +65,38 @@ public class BookingRestController {
 
     @PostMapping("create")
     public ResponseEntity<?> createBooking(@RequestBody BookingDTO bookingDTO) {
-
-        Booking booking = bookingRepository
-                .save(new Booking(LocalDate.parse(bookingDTO.getBookingDate()), bookingDTO.getIsDelete(), bookingDTO.getNote(),
-                        userRepository.findById(bookingDTO.getUserId()).orElse(null)));
-        bookingDTO.getServiceList().stream().forEach((item) -> {
-            if (hairServiceRepository.findById(item).orElse(null).getType()
-                    .equals(employeeRepository.findById(bookingDTO.getStyleId()).orElse(null).getType())) {
-                bookingDetailRepository.save(new BookingDetail(userRepository.findById(bookingDTO.getUserId())
-                        .orElse(null).getFullName(),
-                        bookingDTO.getIsDelete(),
-                        hairServiceRepository.findById(item).orElse(null),
-                        booking,
-                        employeeRepository.findById(bookingDTO.getStyleId()).orElse(null),
-                        workingTimeRepository.findById(bookingDTO.getWorkTimeId()).orElse(null)));
-            } else
-                bookingDetailRepository.save(new BookingDetail(
-                        userRepository.findById(bookingDTO.getUserId()).orElse(null).getFullName(),
-                        bookingDTO.getIsDelete(),
-                        hairServiceRepository.findById(item).orElse(null), booking,
-                        employeeRepository.findById(bookingDTO.getSkinnerId()).orElse(null),
-                        workingTimeRepository.findById(bookingDTO.getWorkTimeId()).orElse(null)));
-        });
+        Booking booking = bookingService.saveBookingAndBookingDetail(bookingDTO);
         return new ResponseEntity<>(booking, HttpStatus.OK);
     }
 
-    @GetMapping("booking-get-exam")
-    public ResponseEntity<?> getBooking() {
-        return new ResponseEntity<>(bookingRepository.findAll(), HttpStatus.OK);
+    @GetMapping("/get-booking")
+    public ResponseEntity<?> getBookingInfo(@RequestParam("bookingId") String bookingId) {
+        Booking booking = bookingRepository.findById(bookingId).orElse(null);
+        List<HairService> listService = booking.getBookingDetailList().stream().map((item)->item.getHairService()).
+               filter((item)-> !item.getServiceId().equals("SER011")).collect(Collectors.toList());
+        Map<String, Object> response = new HashMap<>();
+        String stylist = bookingDetailRepository.getStylist(bookingId).get(0).getEmployee().getEmployeeId();
+        String skinner= bookingDetailRepository.getSkinnerlist(bookingId).get(0).getEmployee().getEmployeeId();
+
+        response.put("branch",booking.getBranch().getBranchId());
+        response.put("bookingId",booking.getBookingId());
+        response.put("bookingDate",booking.getBookingDate());
+        response.put("isDelete",booking.getIsDelete());
+        response.put("serviceList",listService);
+        response.put("styleId",stylist);
+        response.put("skinnerId",skinner);
+        response.put("userId",booking.getUser().getUserId());
+        response.put("workTimeId",bookingDetailRepository.getStylist(bookingId).get(0).getWorkingTime().getWorkingTimeId());
+        response.put("note",booking.getNote());
+
+        return  new ResponseEntity<>(response,HttpStatus.OK);
     }
+
+    @PostMapping("update/{bookingId}")
+    public ResponseEntity<?> createBooking(@RequestBody BookingDTO bookingDTO, @PathVariable("bookingId") String bookingId) {
+        Booking booking = bookingService.updateBookingAndBookingDetail(bookingDTO,bookingId);
+        return new ResponseEntity<>(booking, HttpStatus.OK);
+    }
+
+
 }

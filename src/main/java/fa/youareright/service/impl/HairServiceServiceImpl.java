@@ -19,11 +19,6 @@ public class HairServiceServiceImpl implements HairServiceService {
     @Autowired
     HairServiceRepository hairServiceRepository;
 
-//    @Override
-//    public Page<HairService> findAll(Pageable pageable, String keyword) {
-//        return hairServiceRepository.findAll(pageable, keyword);
-//    }
-
     public Page<HairService> listAll(String condition, Pageable pageable) {
         return hairServiceRepository.findAllByService(condition, condition, pageable);
     }
@@ -34,19 +29,21 @@ public class HairServiceServiceImpl implements HairServiceService {
     }
 
     @Override
-
     public Optional<HairService> findById(String serviceId) {
         return hairServiceRepository.findById(serviceId);
     }
 
     @Override
     public void delete(String serviceId) {
-        hairServiceRepository.deleteById(serviceId);
+        hairServiceRepository.delete(serviceId);
     }
-
 
     public List<HairService> findList() {
         return hairServiceRepository.findAll();
     }
 
+    @Override
+    public HairService get(String serviceId) {
+        return hairServiceRepository.findById(serviceId).orElse(new HairService());
+    }
 }

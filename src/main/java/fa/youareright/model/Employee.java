@@ -1,13 +1,28 @@
 package fa.youareright.model;
 
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import fa.youareright.dto.EmployeeInfo;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+
 import java.util.List;
 import org.hibernate.annotations.Parameter;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -36,6 +51,7 @@ public class Employee {
     private Branch branch;
 
     @OneToMany(mappedBy = "employee")
+    @JsonBackReference
     private List<BookingDetail> bookingDetailList;
 
     @OneToMany(mappedBy = "employee")

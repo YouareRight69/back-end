@@ -3,7 +3,9 @@ package fa.youareright.service;
 import fa.youareright.model.Branch;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
 import org.springframework.data.jpa.repository.Query;
+
 
 import java.util.Optional;
 
@@ -23,5 +25,7 @@ public interface BranchService {
 
     Branch get(String branchId);
 
+
     Branch findByBranchId(String branchId);
+
 }

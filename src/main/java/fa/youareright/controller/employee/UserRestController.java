@@ -39,11 +39,9 @@ import fa.youareright.dto.RegisterInfo;
 import fa.youareright.dto.UpdateInfoDTO;
 import fa.youareright.dto.UserAccountDTO;
 import fa.youareright.model.Account;
-import fa.youareright.model.Employee;
 import fa.youareright.model.Role;
 import fa.youareright.model.User;
 import fa.youareright.repository.AccountRepository;
-import fa.youareright.repository.EmployeeRepository;
 import fa.youareright.service.AccountService;
 import fa.youareright.service.SendMailService;
 import fa.youareright.service.UserService;
@@ -55,8 +53,6 @@ public class UserRestController {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
-	@Autowired
-	private EmployeeRepository employeeRepository;
 
 	@Autowired
 	private AccountRepository accountRepository;
@@ -75,6 +71,10 @@ public class UserRestController {
 
 	List<OTP> otps = new ArrayList<>();
 
+	/**
+	 * 
+	 * @author NamNB6
+	 */
 	@PostMapping("/auth/login")
 	public ResponseEntity<?> login(@RequestBody @Valid AuthRequest request) {
 		try {
@@ -84,11 +84,16 @@ public class UserRestController {
 			String accessToken = jwtTokenUtil.generateAccessToken(acc);
 			AuthResponse response = new AuthResponse(acc.getUsername(), accessToken);
 			return ResponseEntity.ok(response);
+			
 		} catch (BadCredentialsException e) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 	}
 
+	/**
+	 * 
+	 * @author NamNB6
+	 */
 	@PostMapping("/forgotPassword")
 	public ResponseEntity<Object> forgotPassword(@RequestParam @Valid String email)
 			throws MessagingException, IOException {
@@ -117,10 +122,14 @@ public class UserRestController {
 		}
 
 		Map<String, Object> errorResponse = new HashMap<>();
-		errorResponse.put("error", "Email này chưa đăng ký!");
+		errorResponse.put("error", "Email này chưa được đăng ký!");
 		return ResponseEntity.badRequest().body(errorResponse);
 	}
 
+	/**
+	 * 
+	 * @author NamNB6
+	 */
 	@PostMapping("/confirmOtp")
 	public ResponseEntity<?> confirmForgotPassword(@RequestBody ConfirmOtp confirmOtp) {
 		// Check OTP
@@ -132,10 +141,14 @@ public class UserRestController {
 		}
 
 		Map<String, String> errorResponse = new HashMap<>();
-		errorResponse.put("error", "Mã xác thực OTP không đúng, thử lại!");
+		errorResponse.put("error", "Mã xác thực OTP không đúng, vui lòng thử lại!");
 		return ResponseEntity.badRequest().body(errorResponse);
 	}
 
+	/**
+	 * 
+	 * @author NamNB6
+	 */
 	@PostMapping("/forgot-changePassword")
 	public ResponseEntity<?> changePassword(@RequestBody ForgotChangePassword forgotChangePassword) {
 
@@ -154,10 +167,14 @@ public class UserRestController {
 		}
 
 		Map<String, String> errorResponse = new HashMap<>();
-		errorResponse.put("error", "Email is not exist!");
+		errorResponse.put("error", "Email này chưa được đăng ký!");
 		return ResponseEntity.badRequest().body(errorResponse);
 	}
 
+	/**
+	 * 
+	 * @author NamNB6
+	 */
 	@PostMapping("/changePassword")
 	public ResponseEntity<?> change(@RequestBody ChangePassword changePassword) {
 		Account acc = accountService.findByUsername(changePassword.getUsername());
@@ -176,15 +193,19 @@ public class UserRestController {
 		return ResponseEntity.badRequest().body(errorResponse);
 	}
 
+	/**
+	 * 
+	 * @author NamNB6
+	 */
 	@PostMapping("/register")
 	public ResponseEntity<?> register(@RequestBody RegisterInfo info) {
 		// Check username, email is exist
 		Map<String, String> errorResponse = new HashMap<>();
 		if (accountService.isUsernameExist(info.getUsername())) {
-			errorResponse.put("error", "Username is exist!");
+			errorResponse.put("error", "Tên đăng nhập đã tồn tại!");
 			return ResponseEntity.badRequest().body(errorResponse);
 		} else if (accountService.isEmailExist(info.getEmail())) {
-			errorResponse.put("error", "Email is exist!");
+			errorResponse.put("error", "Email đã tồn tại!");
 			return ResponseEntity.badRequest().body(errorResponse);
 		}
 
@@ -221,6 +242,10 @@ public class UserRestController {
 		return ResponseEntity.ok(response);
 	}
 
+	/**
+	 * 
+	 * @author NamNB6
+	 */
 	@GetMapping("/updateInfo")
 	public ResponseEntity<?> getUpdateInfo(@RequestParam Integer accountId) {
 		User user = userService.findByAccountId(accountId);
@@ -236,6 +261,10 @@ public class UserRestController {
 		return ResponseEntity.ok(response);
 	}
 
+	/**
+	 * 
+	 * @author NamNB6
+	 */
 	@PostMapping("/updateInfo")
 	public ResponseEntity<?> updateInfo(@RequestBody UpdateInfoDTO info) {
 		userService.updateInfo(info);
@@ -245,11 +274,5 @@ public class UserRestController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/allEmp")
-	public ResponseEntity<List<Employee>> getAllEmp() {
-		List<Employee> listAll = employeeRepository.listAll();
-		ResponseEntity<List<Employee>> response = ResponseEntity.ok(listAll);
-		return response;
-	}
 
 }

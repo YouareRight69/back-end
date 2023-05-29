@@ -2,11 +2,10 @@ package fa.youareright.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,6 +15,8 @@ import java.util.List;
 @NoArgsConstructor
 public class Branch {
     @Id
+    @GeneratedValue(generator = "auto-generator")
+    @GenericGenerator(name = "auto-generator", parameters = @org.hibernate.annotations.Parameter(name = "prefix", value = "BRA"), strategy = "fa.youareright.utils.AutoGeneration")
     @Column(name="branch_id",columnDefinition = "varchar(10)")
     private String branchId;
     private String name;
@@ -30,7 +31,14 @@ public class Branch {
     @OneToMany(mappedBy = "branch")
     private List<Media> media;
 
+
     public Branch(String branchId) {
         this.branchId = branchId;
     }
+
+   @OneToMany(mappedBy = "branch")
+   @JsonBackReference
+    private List<Booking> bookingList;
+
+
 }

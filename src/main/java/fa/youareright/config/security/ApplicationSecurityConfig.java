@@ -57,12 +57,13 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 		});
 
 		http.authorizeRequests()
-				.antMatchers("/auth/login", "/oauth2/**", "/forgotPassword", "/confirmOtp", "/forgot-changePassword", "/register", "/allEmp")
+				.antMatchers("/auth/login", "/oauth2/**", "/forgotPassword", "/confirmOtp", "/forgot-changePassword",
+						"/register")
 				.permitAll().anyRequest().authenticated().and().oauth2Login().userInfoEndpoint()
 				.userService(customerOAuth2UserService);
 
 		http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
-		http.cors(); 
+		http.cors();
 	}
 
 }

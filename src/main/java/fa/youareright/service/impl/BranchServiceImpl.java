@@ -47,8 +47,12 @@ public class BranchServiceImpl implements BranchService {
         return branchRepository.findById(branchId).orElse(new Branch());
     }
 
+
     @Override
     public Branch findByBranchId(String branchId) {
         return branchRepository.findByBranchId(branchId).get();
     }
 }
+
+
+

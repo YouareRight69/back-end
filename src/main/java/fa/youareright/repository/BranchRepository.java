@@ -10,9 +10,15 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
 import java.util.Optional;
 
+
+
+
 public interface BranchRepository extends JpaRepository<Branch, String> {
+
+
     @Query(value = "select * from branch where (name like concat('%',:name,'%') or address like concat('%',:address,'%')) AND is_delete = 0",
             nativeQuery = true)
     Page<Branch> findAllByService(@Param("name") String name,
@@ -25,6 +31,8 @@ public interface BranchRepository extends JpaRepository<Branch, String> {
 
     List<Branch> findByIsDelete(Integer isDelete);
 
+
     @Query(value = "select * from branch where branch.branch_id = :branchId", nativeQuery = true)
     Optional<Branch> findByBranchId(@Param("branchId") String branchId);
+
 }
