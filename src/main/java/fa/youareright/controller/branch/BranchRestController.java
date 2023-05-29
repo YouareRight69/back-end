@@ -81,6 +81,7 @@ public class BranchRestController {
         currentBranch.get().setBranchId(branchMediaDTO.getBranchId());
         currentBranch.get().setName(branchMediaDTO.getName());
         currentBranch.get().setAddress(branchMediaDTO.getAddress());
+        mediaService.delete(branchId);
 
         for (String url : branchMediaDTO.getMedia()) {
             Media media = new Media();
