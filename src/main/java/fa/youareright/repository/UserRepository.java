@@ -47,3 +47,4 @@ public interface UserRepository extends JpaRepository<User, String> {
 	Optional<User> findByEmpId(@Param("employeeId") String employeeId);
 
 }
+	
