@@ -1,9 +1,7 @@
 package fa.youareright.controller.branch;
 
 import fa.youareright.dto.BranchMediaDTO;
-import fa.youareright.dto.HairServiceDto;
 import fa.youareright.model.Branch;
-import fa.youareright.model.HairService;
 import fa.youareright.model.Media;
 import fa.youareright.repository.MediaRepository;
 import fa.youareright.service.BranchService;
@@ -18,8 +16,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
