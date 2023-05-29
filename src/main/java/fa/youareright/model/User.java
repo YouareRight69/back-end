@@ -46,6 +46,7 @@ public class User {
     private List<Booking> bookingList;
 
     @OneToOne(mappedBy = "user")
+    @JsonBackReference
     private Employee employee;
 
     @OneToMany(mappedBy = "user")
