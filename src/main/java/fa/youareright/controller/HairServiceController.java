@@ -32,9 +32,6 @@ public class HairServiceController {
     HairServiceService hairServiceService;
 
     @Autowired
-    private HairServiceRepository hairServiceRepository;
-
-    @Autowired
     MediaRepository mediaRepository;
 
     @GetMapping("")
@@ -45,7 +42,8 @@ public class HairServiceController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> create(@RequestBody @Valid HairServiceDto hairServiceDto, BindingResult bindingResult) {
+    public ResponseEntity<?> create(@RequestBody @Valid HairServiceDto hairServiceDto,
+                                    BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(bindingResult.getFieldErrors(), HttpStatus.NOT_ACCEPTABLE);
@@ -63,7 +61,7 @@ public class HairServiceController {
             mediaRepository.save(media);
         }
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(hairServiceDto,HttpStatus.OK);
     }
 
     @GetMapping("/{serviceId}")
@@ -103,7 +101,9 @@ public class HairServiceController {
 //    }
 
     @PatchMapping("/{serviceId}")
-    public ResponseEntity<?> update(@PathVariable("serviceId") String serviceId, @RequestBody @Valid HairServiceDto hairServiceDto, BindingResult bindingResult) {
+    public ResponseEntity<?> update(@PathVariable("serviceId") String serviceId,
+                                    @RequestBody @Valid HairServiceDto hairServiceDto,
+                                    BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(bindingResult.getFieldErrors(), HttpStatus.NOT_ACCEPTABLE);
         }
@@ -120,25 +120,15 @@ public class HairServiceController {
         // Save the updated hairService
         this.hairServiceService.save(hairServices);
 
-        // Update media for the hairService
-        List<Media> existingMedia = mediaRepository.findByHairService(hairServices);
-        List<Media> updatedMedia = new ArrayList<>();
-
         for (String url : hairServiceDto.getMedia()) {
-            Media media = existingMedia.stream()
-                    .filter(m -> m.getUrl().equals(url))
-                    .findFirst()
-                    .orElseGet(() -> new Media());
-
+            Media media = new Media();
             BeanUtils.copyProperties(hairServiceDto, media, "media");
             media.setUrl(url);
             media.setHairService(hairServices);
-            updatedMedia.add(media);
+            mediaRepository.save(media);
         }
 
-        mediaRepository.saveAll(updatedMedia);
-
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(hairService.get(),HttpStatus.OK);
     }
 
     private String[] getNullPropertyNames(Object source) {
