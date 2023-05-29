@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.transaction.annotation.Transactional;
 
 import fa.youareright.model.User;
@@ -38,4 +39,12 @@ public interface UserRepository extends JpaRepository<User, String> {
 	@Query(value = "select u from User u where u.employee.branch.branchId like :branch and u.employee.isDelete = 0  ")
 	List<User> getListEmployee(@Param("branch") String branch);
 
+	@Query(value = "select * from user where user.user_id = :userId", nativeQuery = true)
+	Optional<User> findByUserId(@Param("userId") String userId);
+
+	@Query(value = "select user.user_id from employee " +
+			"inner join user on user.user_id = employee.user_id where employee.emp_id = :employeeId	", nativeQuery = true)
+	Optional<User> findByEmpId(@Param("employeeId") String employeeId);
+
 }
+	

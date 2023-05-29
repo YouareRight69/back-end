@@ -4,6 +4,9 @@ import fa.youareright.model.Branch;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import org.springframework.data.jpa.repository.Query;
+
+
 import java.util.Optional;
 
 import java.util.List;
@@ -21,5 +24,8 @@ public interface BranchService {
     List<Branch> findList();
 
     Branch get(String branchId);
+
+
+    Branch findByBranchId(String branchId);
 
 }

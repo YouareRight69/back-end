@@ -1,6 +1,15 @@
 package fa.youareright.model;
 
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import fa.youareright.dto.EmployeeInfo;
+import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+
 import java.util.List;
+import org.hibernate.annotations.Parameter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,9 +31,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Employee {
     @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @GenericGenerator(name = "auto-generator", parameters = @Parameter(name = "prefix", value = "SER"), strategy = "fa.youareright.utils.AutoGeneration")
     @Column(name = "emp_id",columnDefinition = "varchar(10)")
     private  String employeeId;
-    
+
     @Column(columnDefinition = "int default 0")
     private int isDelete;
     private String type;
@@ -45,4 +56,14 @@ public class Employee {
 
     @OneToMany(mappedBy = "employee")
     private List<InvoiceDetail> invoiceDetailList;
+
+
+
+    public Employee(String id, EmployeeInfo employeeInfo) {
+        this.employeeId = id;
+        this.isDelete = employeeInfo.getIsDelete();
+        this.type = employeeInfo.getType();
+        this.user = new User(employeeInfo.getUserId());
+        this.branch = new Branch(employeeInfo.getBranchId());
+    }
 }

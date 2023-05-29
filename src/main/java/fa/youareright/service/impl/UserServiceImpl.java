@@ -64,4 +64,14 @@ public class UserServiceImpl implements UserService {
         user.setAccount(user.getAccount());
         userRepository.save(user);
     }
+
+	@Override
+	public User findByUserId(String userId) {
+		return userRepository.findByUserId(userId).get();
+	}
+
+	@Override
+	public User findByEmpId(String employeeId) {
+		return userRepository.findByEmpId(employeeId).get();
+	}
 }

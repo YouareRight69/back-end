@@ -24,5 +24,7 @@ public interface UserService {
 	Page<User> findAll(Pageable pageable, @Param("keyword") String keyword);
 
 	void save(User user);
+	User findByUserId(String userId);
+	User findByEmpId(String employeeId);
 
 }
