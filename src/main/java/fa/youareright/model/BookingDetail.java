@@ -17,9 +17,9 @@ public class BookingDetail {
     @GenericGenerator(name = "auto-generator",
             parameters = @org.hibernate.annotations.Parameter(name = "prefix", value = "BKD"),
             strategy = "fa.youareright.utils.MyGenerator")
-    @Column(name = "booking_detail_id",columnDefinition = "varchar(10)")
+    @Column(name = "booking_detail_id", columnDefinition = "varchar(10)")
     private String bookingDetailId;
-    private String name;
+
     @Column(columnDefinition = "int default 0")
     private int isDelete;
 
@@ -29,22 +29,22 @@ public class BookingDetail {
     private HairService hairService;
 
     @ManyToOne
-
+    @JsonBackReference
     @JoinColumn(name = "booking_id")
     private Booking booking;
 
     @ManyToOne
-    @JsonBackReference
+
     @JoinColumn(name = "emp_id")
     private Employee employee;
 
     @ManyToOne
-    @JsonBackReference
+
     @JoinColumn(name = "working_time_id")
     private WorkingTime workingTime;
 
-    public BookingDetail(String name, int isDelete, HairService hairService, Booking booking, Employee employee, WorkingTime workingTime) {
-        this.name = name;
+    public BookingDetail( int isDelete, HairService hairService, Booking booking, Employee employee, WorkingTime workingTime) {
+
         this.isDelete = isDelete;
         this.hairService = hairService;
         this.booking = booking;

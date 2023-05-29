@@ -37,7 +37,5 @@ public class HairService {
     private List<Media> media;
 
     public void setMedia(List<String> media) {
-
     }
-
 }

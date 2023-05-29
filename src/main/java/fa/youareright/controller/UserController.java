@@ -65,4 +65,14 @@ public class UserController {
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+
+    @GetMapping("findAll")
+    public ResponseEntity<Page<User>> findAll( ) {
+        Page<User> users = userService.findAll(Pageable.unpaged(),"");
+        if (users.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
 }

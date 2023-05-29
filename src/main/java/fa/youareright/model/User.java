@@ -17,7 +17,6 @@ public class User {
     @Column(name = "user_id", columnDefinition = "varchar(10)")
     private String userId;
 
-    @JsonBackReference
     @OneToOne
     @JoinColumn(name = "account_id")
     private Account account;
@@ -27,13 +26,18 @@ public class User {
 
     @Column(columnDefinition = "varchar(11)")
     private String phoneNumber;
+
     @Column(columnDefinition = "varchar(100)")
     private String address;
+
     @Column(columnDefinition = "varchar(10)")
     private String gender;
+
     private String avatar;
+
     @Column(name = "date_of_birth", columnDefinition = "date")
     private LocalDate dateOfBirth;
+
     @Column(columnDefinition = "varchar(30)")
     private String status;
 
@@ -41,6 +45,7 @@ public class User {
     private List<Booking> bookingList;
 
     @OneToOne(mappedBy = "user")
+
     private Employee employee;
 
     @OneToMany(mappedBy = "user")

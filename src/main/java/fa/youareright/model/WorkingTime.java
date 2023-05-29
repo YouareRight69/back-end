@@ -1,14 +1,18 @@
 package fa.youareright.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.*;
+import java.time.LocalTime;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import java.time.LocalTime;
-import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -24,6 +28,7 @@ public class WorkingTime {
     private String dateType;
 
     @OneToMany(mappedBy = "workingTime")
+    @JsonBackReference
     private List<BookingDetail> bookingDetailList;
 
 }
