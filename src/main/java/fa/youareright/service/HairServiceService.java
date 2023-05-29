@@ -1,8 +1,6 @@
 package fa.youareright.service;
 
-import fa.youareright.dto.HairServiceDto;
 import fa.youareright.model.HairService;
-import fa.youareright.model.Media;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -19,7 +17,6 @@ public interface HairServiceService {
     Optional<HairService> findById(String serviceId);
 
     void delete(String serviceId);
-
 
     List<HairService> findList();
 

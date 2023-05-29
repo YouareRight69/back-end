@@ -1,5 +1,6 @@
 package fa.youareright.repository;
 
+import fa.youareright.model.HairService;
 import fa.youareright.model.Media;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -17,4 +18,5 @@ public interface MediaRepository  extends JpaRepository<Media, Integer> {
     @Query(value = "DELETE FROM Media m WHERE m.branch.branchId = :branchId")
     void deleteByBranchId(@Param("branchId") String branchId);
 
+    List<Media> findByHairService(HairService hairService);
 }
