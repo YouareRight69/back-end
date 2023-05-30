@@ -53,7 +53,6 @@ public class UserRestController {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
-
 	@Autowired
 	private AccountRepository accountRepository;
 
@@ -84,7 +83,7 @@ public class UserRestController {
 			String accessToken = jwtTokenUtil.generateAccessToken(acc);
 			AuthResponse response = new AuthResponse(acc.getUsername(), accessToken);
 			return ResponseEntity.ok(response);
-			
+
 		} catch (BadCredentialsException e) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
@@ -273,6 +272,5 @@ public class UserRestController {
 		response.put("msg", "Update successfully.");
 		return ResponseEntity.ok(response);
 	}
-
 
 }
