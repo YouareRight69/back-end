@@ -19,19 +19,47 @@ public class HairServiceServiceImpl implements HairServiceService {
     @Autowired
     HairServiceRepository hairServiceRepository;
 
+    /**
+     * @param pageable, condition
+     * @return findAllByService()
+     * @Creator HuyenTN2
+     * @Date 30/05/2023
+     */
+
     public Page<HairService> listAll(String condition, Pageable pageable) {
         return hairServiceRepository.findAllByService(condition, condition, pageable);
     }
+
+    /**
+     * @param hairService
+     * @return save()
+     * @Creator HuyenTN2
+     * @Date 30/05/2023
+     */
 
     @Override
     public void save(HairService hairService) {
         hairServiceRepository.save(hairService);
     }
 
+    /**
+     * @param serviceId
+     * @return findById()
+     * @Creator HuyenTN2
+     * @Date 30/05/2023
+     */
+
     @Override
     public Optional<HairService> findById(String serviceId) {
         return hairServiceRepository.findById(serviceId);
     }
+
+    /**
+     * @param serviceId
+     * @return delete()
+     * @Creator HuyenTN2
+     * @Date 30/05/2023
+     */
 
     @Override
     public void delete(String serviceId) {

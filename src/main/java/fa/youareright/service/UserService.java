@@ -1,5 +1,6 @@
 package fa.youareright.service;
 
+import fa.youareright.model.HairService;
 import org.springframework.stereotype.Service;
 
 import fa.youareright.dto.UpdateInfoDTO;
@@ -21,7 +22,14 @@ public interface UserService {
 
 	void updateInfo(UpdateInfoDTO info);
 
-	Page<User> findAll(Pageable pageable, @Param("keyword") String keyword);
+	/**
+	 * @param condition, condition
+	 * @return listAll()
+	 * @Creator HuyenTN2
+	 * @Date 30/05/2023
+	 */
+
+	Page<User> listAll(String condition, Pageable pageable);
 
 	void save(User user);
 	User findByUserId(String userId);

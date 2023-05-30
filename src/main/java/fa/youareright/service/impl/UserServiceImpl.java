@@ -1,5 +1,6 @@
 package fa.youareright.service.impl;
 
+import fa.youareright.model.HairService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -50,14 +51,20 @@ public class UserServiceImpl implements UserService {
 				info.getPhoneNumber(), info.getUserId());
 	}
 
+	/**
+	 * @param condition, condition
+	 * @return findAllByUser()
+	 * @Creator HuyenTN2
+	 * @Date 30/05/2023
+	 */
 
-    @Autowired
+	@Override
+	public Page<User> listAll(String condition, Pageable pageable) {
+		return userRepository.findAllByUser(condition,condition,pageable);
+	}
+
+	@Autowired
     AccountRepository accountRepository;
-
-    @Override
-    public Page<User> findAll(Pageable pageable, String keyword) {
-        return userRepository.findAll(pageable, keyword);
-    }
 
     @Override
     public void save(User user) {
