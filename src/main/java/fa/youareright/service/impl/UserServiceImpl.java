@@ -5,6 +5,9 @@ import fa.youareright.repository.AccountRepository;
 import fa.youareright.repository.AccountRoleRepository;
 import fa.youareright.repository.UserRepository;
 import fa.youareright.service.UserService;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,4 +32,5 @@ public class UserServiceImpl implements UserService {
         user.setAccount(user.getAccount());
         userRepository.save(user);
     }
+ 
 }
