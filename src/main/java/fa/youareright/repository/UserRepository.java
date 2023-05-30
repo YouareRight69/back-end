@@ -36,6 +36,9 @@ public interface UserRepository extends JpaRepository<User, String> {
 			+ "address like %:keyword% ", nativeQuery = true)
 	Page<User> findAll(Pageable pageable, @Param("keyword") String keyword);
 
+//	@Query(value = "select u from User u where u.account.roles[ro].roleId = 3")
+//	List<User> findEmp();
+
 	@Query(value = "select u from User u where u.employee.branch.branchId like :branch and u.employee.isDelete = 0  ")
 	List<User> getListEmployee(@Param("branch") String branch);
 
@@ -46,5 +49,12 @@ public interface UserRepository extends JpaRepository<User, String> {
 			"inner join user on user.user_id = employee.user_id where employee.emp_id = :employeeId	", nativeQuery = true)
 	Optional<User> findByEmpId(@Param("employeeId") String employeeId);
 
+	@Query( value = "select u.*\n" +
+			"from employee e\n" +
+			"inner join user u on u.user_id = e.user_id\n" +
+			"inner join account acc on acc.account_id = u.account_id\n" +
+			"inner join account_role accr on acc.account_id = accr.account_id\n" +
+			"where accr.role_id = 3;", nativeQuery = true)
+	List<User> findAllEmp();
 }
 	

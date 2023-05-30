@@ -46,4 +46,6 @@ public class HairServiceServiceImpl implements HairServiceService {
     public HairService get(String serviceId) {
         return hairServiceRepository.findById(serviceId).orElse(new HairService());
     }
+
+
 }
