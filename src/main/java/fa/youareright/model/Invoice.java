@@ -2,6 +2,7 @@ package fa.youareright.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -14,6 +15,10 @@ import java.util.List;
 @NoArgsConstructor
 public class Invoice {
     @Id
+    @GeneratedValue(generator = "auto-generator")
+    @GenericGenerator(name = "auto-generator",
+            parameters = @org.hibernate.annotations.Parameter(name = "prefix", value = "IVO"),
+            strategy = "fa.youareright.utils.MyGenerator")
     @Column(name = "invoice_id",columnDefinition = "varchar(10)")
     private String invoiceId;
     @Column(columnDefinition = "int default 0")
@@ -38,6 +43,5 @@ public class Invoice {
 
     private float total;
     private String status;
-
 
 }

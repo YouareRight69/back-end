@@ -2,9 +2,11 @@ package fa.youareright.controller.branch;
 
 import fa.youareright.dto.BranchMediaDTO;
 import fa.youareright.dto.HairServiceDto;
+import fa.youareright.model.BookingDetail;
 import fa.youareright.model.Branch;
 import fa.youareright.model.HairService;
 import fa.youareright.model.Media;
+import fa.youareright.repository.BookingDetailRepository;
 import fa.youareright.repository.MediaRepository;
 import fa.youareright.service.BranchService;
 import fa.youareright.service.MediaService;
@@ -34,6 +36,9 @@ public class BranchRestController {
 
     @Autowired
     MediaService mediaService;
+
+    @Autowired
+    BookingDetailRepository bookingDetailRepository;
 
     @GetMapping("")
     public ResponseEntity<Page<Branch>> findAllByCondition(
@@ -120,7 +125,6 @@ public class BranchRestController {
     @GetMapping("/list")
     public ResponseEntity<?> getListBranch() {
         return new ResponseEntity<>(branchService.findList(), HttpStatus.OK);
-
     }
 
 }

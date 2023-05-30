@@ -48,27 +48,12 @@ public class InvoiceRestController {
         return new ResponseEntity<>(bookingList,HttpStatus.OK);
     }
 
-//    @GetMapping("/details")
-//    public ResponseEntity<?> getDetails(@RequestParam(name= "id") String bookingId) {
-//        Booking booking = bookingService.findById(bookingId);
-//        List<ListServiceResponse> service = booking.getBookingDetailList().stream().map(item->
-//                new ListServiceResponse(item.getHairService().getName(),item.getEmployee().getUser().getFullName(),
-//                        item.getHairService().getPrice()) ).collect(Collectors.toList());
-//        double total = service.stream().mapToDouble(ListServiceResponse:: getPrice).sum();
-//        Map<String, Object> resp = new HashMap<>();
-//        resp.put("id", booking.getBookingId());
-//        resp.put("date", booking.getBookingDate());
-//        resp.put("time", booking.getBookingDetailList().get(0).getWorkingTime().getTimeZone());
-//        resp.put("name", booking.getBookingDetailList().get(0).getName());
-//        resp.put("branch", booking.getBranch().getName());
-//        resp.put("service",service);
-//        resp.put("total", total);
-//
-//        return new ResponseEntity<>(resp,HttpStatus.OK);
-//    }
-
     @GetMapping("/bookingdetail")
     public ResponseEntity<?> getListBookingDetail() {
         return new ResponseEntity<>(bookingDetailRepository.findAll(), HttpStatus.OK);
+    }
+    @GetMapping("/booking/{bookingId}")
+    public ResponseEntity<?> getListBookingById(@PathVariable String bookingId) {
+        return new ResponseEntity<>(bookingRepository.findById(bookingId), HttpStatus.OK);
     }
 }

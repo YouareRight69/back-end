@@ -3,7 +3,9 @@ package fa.youareright.controller;
 import fa.youareright.dto.AccountDto;
 import fa.youareright.dto.UserDto;
 import fa.youareright.model.Account;
+import fa.youareright.model.Branch;
 import fa.youareright.model.User;
+import fa.youareright.repository.UserRepository;
 import fa.youareright.service.AccountService;
 import fa.youareright.service.UserService;
 import org.springframework.beans.BeanUtils;
@@ -30,6 +32,9 @@ public class UserController {
 
     @Autowired
     AccountService accountService;
+
+    @Autowired
+    UserRepository userRepository;
 
     @GetMapping("")
     public ResponseEntity<Page<User>> findAll(@PageableDefault(value = 5) Pageable pageable, @RequestParam Optional<String> keyword) {
@@ -75,4 +80,16 @@ public class UserController {
         }
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
+
+
+    @GetMapping("/detail")
+    public ResponseEntity<User> findById(@RequestParam(name= "id")  String userId) {
+        Optional<User> user = userRepository.findById(userId);
+
+        if (!userRepository.findById(userId).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(user.orElse(null), HttpStatus.OK);
+    }
+
 }
