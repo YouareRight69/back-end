@@ -42,7 +42,7 @@ private BookingDetailRepository bookingDetailRepository;
         return new ResponseEntity<>(bookingService.deleteBooking(bookingId),HttpStatus.OK);
     }
 
-    @GetMapping("details")
+    @GetMapping("/details")
     public ResponseEntity<?> getDetails(@RequestParam(name= "id") String bookingId) {
         Booking booking = bookingService.findById(bookingId);
         List<ListServiceResponse> service = booking.getBookingDetailList().stream().map(item->
