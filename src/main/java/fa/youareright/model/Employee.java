@@ -42,12 +42,12 @@ public class Employee {
 
     @OneToOne
     @JoinColumn(name = "user_id")
-//    @JsonBackReference
+    @JsonBackReference
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "branch_id")
-//    @JsonBackReference
+    @JsonBackReference
     private Branch branch;
 
     @OneToMany(mappedBy = "employee")
