@@ -19,7 +19,7 @@ public class BookingDetail {
             strategy = "fa.youareright.utils.MyGenerator")
     @Column(name = "booking_detail_id", columnDefinition = "varchar(10)")
     private String bookingDetailId;
-    private String name;
+
     @Column(columnDefinition = "int default 0")
     private int isDelete;
 
@@ -43,8 +43,8 @@ public class BookingDetail {
     @JoinColumn(name = "working_time_id")
     private WorkingTime workingTime;
 
-    public BookingDetail(String name, int isDelete, HairService hairService, Booking booking, Employee employee, WorkingTime workingTime) {
-        this.name = name;
+    public BookingDetail( int isDelete, HairService hairService, Booking booking, Employee employee, WorkingTime workingTime) {
+
         this.isDelete = isDelete;
         this.hairService = hairService;
         this.booking = booking;
