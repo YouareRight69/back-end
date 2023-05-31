@@ -50,7 +50,7 @@ public class BookingManagementRestController {
                 .collect(Collectors.joining()).contains("ROLE_CUSTOMER");
         Page<Booking> bookingList;
         if(checkRole) {
-            bookingList = bookingService.findAll(condition,
+            bookingList = bookingService.findAllByCustomer(condition,
                     accountRepository.findById(accountId).orElse(null).getUser().getFullName(),
                     pageable);
         }else {
