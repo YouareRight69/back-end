@@ -1,8 +1,10 @@
 package fa.youareright.repository;
 
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,5 +48,11 @@ public interface UserRepository extends JpaRepository<User, String> {
 			"inner join user on user.user_id = employee.user_id where employee.emp_id = :employeeId	", nativeQuery = true)
 	Optional<User> findByEmpId(@Param("employeeId") String employeeId);
 
+    
+ 
+    @Query(value ="select count(full_name) as totalUser from user",nativeQuery = true)
+    List<UserTotal> getCountUser();
+    
+    
 }
 	

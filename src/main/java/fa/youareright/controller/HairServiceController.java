@@ -76,32 +76,6 @@ public class HairServiceController {
         return new ResponseEntity<>(hairService.orElse(null), HttpStatus.OK);
     }
 
-//    @PatchMapping("/{serviceId}")
-//    public ResponseEntity<HairService> update(@PathVariable String serviceId,
-//                                              @Valid @RequestBody HairServiceDto hairServiceDto,
-//                                              BindingResult bindingResult) {
-//        Optional<HairService> currentHairService = hairServiceService.findById(serviceId);
-//
-//        if (bindingResult.hasFieldErrors()) {
-//            return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
-//        }
-//
-//        if (!currentHairService.isPresent()) {
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        }
-//
-//        currentHairService.get().setServiceId(hairServiceDto.getServiceId());
-//        currentHairService.get().setName(hairServiceDto.getName());
-//        currentHairService.get().setPrice(hairServiceDto.getPrice());
-//        currentHairService.get().setDescription(hairServiceDto.getDescription());
-//        currentHairService.get().setType(hairServiceDto.getType());
-//        currentHairService.get().setMedia(hairServiceDto.getMedia());
-//
-//        hairServiceService.save(currentHairService.get());
-//
-//        return new ResponseEntity<>(currentHairService.get(), HttpStatus.OK);
-//    }
-
     @PatchMapping("/{serviceId}")
     public ResponseEntity<?> update(@PathVariable("serviceId") String serviceId, @RequestBody @Valid HairServiceDto hairServiceDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -113,17 +87,11 @@ public class HairServiceController {
         if (hairServices == null) {
             return new ResponseEntity<>("HairService not found", HttpStatus.NOT_FOUND);
         }
-
-        // Update properties of hairService using hairServiceDto
         BeanUtils.copyProperties(hairServiceDto, hairServices, getNullPropertyNames(hairServiceDto));
 
-        // Save the updated hairService
         this.hairServiceService.save(hairServices);
-
-        // Update media for the hairService
         List<Media> existingMedia = mediaRepository.findByHairService(hairServices);
         List<Media> updatedMedia = new ArrayList<>();
-
         for (String url : hairServiceDto.getMedia()) {
             Media media = existingMedia.stream()
                     .filter(m -> m.getUrl().equals(url))
@@ -135,12 +103,9 @@ public class HairServiceController {
             media.setHairService(hairServices);
             updatedMedia.add(media);
         }
-
         mediaRepository.saveAll(updatedMedia);
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
     private String[] getNullPropertyNames(Object source) {
         final BeanWrapper wrappedSource = new BeanWrapperImpl(source);
         return Stream.of(wrappedSource.getPropertyDescriptors())
@@ -149,7 +114,6 @@ public class HairServiceController {
                 .toArray(String[]::new);
     }
 
-
     @DeleteMapping("/{serviceId}")
     public ResponseEntity<Void> delete(@PathVariable String serviceId) {
         Optional<HairService> hairService = hairServiceService.findById(serviceId);
@@ -157,7 +121,8 @@ public class HairServiceController {
         if (hairService == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
+    
+        
         hairServiceService.delete(serviceId);
         return new ResponseEntity(HttpStatus.OK);
     }
