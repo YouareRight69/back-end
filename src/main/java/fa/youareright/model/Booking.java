@@ -30,7 +30,7 @@ public class Booking {
     private int isDelete;
     @Column(columnDefinition = "text")
     private String note;
-
+    private String name;
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "user_id")
@@ -47,19 +47,21 @@ public class Booking {
     @JoinColumn(name= "branch_id")
     private Branch branch;
 
-    public Booking(LocalDate bookingDate, int isDelete, String note, User user, Branch branch) {
+    public Booking(LocalDate bookingDate, int isDelete, String note, User user, Branch branch,String name) {
         this.bookingDate = bookingDate;
         this.isDelete = isDelete;
         this.note = note;
         this.user = user;
         this.branch= branch;
+        this.name= name;
     }
-    public Booking(String bookingId,LocalDate bookingDate, int isDelete, String note, User user, Branch branch) {
+    public Booking(String bookingId,LocalDate bookingDate, int isDelete, String note, User user, Branch branch,String name) {
         this.bookingDate = bookingDate;
         this.isDelete = isDelete;
         this.note = note;
         this.user = user;
         this.branch= branch;
         this.bookingId= bookingId;
+        this.name= name;
     }
 }
