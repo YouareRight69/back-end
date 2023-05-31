@@ -1,5 +1,6 @@
 package fa.youareright.service;
 
+import fa.youareright.model.HairService;
 import org.springframework.stereotype.Service;
 
 import fa.youareright.dto.UpdateInfoDTO;
@@ -11,20 +12,37 @@ import org.springframework.data.repository.query.Param;
 @Service
 public interface UserService {
 
-	String getLastUserId();
+    String getLastUserId();
+
+
+//    String getNextId(String inputId);
+
 
 	String getNextId(String inputId);
 
-	void saveNamNB6(User user);
 
-	User findByAccountId(Integer accountId);
+    void saveNamNB6(User user);
 
-	void updateInfo(UpdateInfoDTO info);
+    User findByAccountId(Integer accountId);
 
-	Page<User> findAll(Pageable pageable, @Param("keyword") String keyword);
+    void updateInfo(UpdateInfoDTO info);
 
-	void save(User user);
-	User findByUserId(String userId);
-	User findByEmpId(String employeeId);
+    /**
+     * @param condition, condition
+     * @return listAll()
+     * @Creator HuyenTN2
+     * @Date 30/05/2023
+     */
+
+    Page<User> listAll(String condition, Pageable pageable);
+
+    void save(User user);
+
+    User findByUserId(String userId);
+
+    User findByEmpId(String employeeId);
+
+    void updateStatus(String userId);
+
 
 }
