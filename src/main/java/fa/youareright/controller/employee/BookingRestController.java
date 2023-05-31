@@ -71,11 +71,10 @@ public class BookingRestController {
     }
 
     @GetMapping("/get-booking")
-    @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST"})
     public ResponseEntity<?> getBookingInfo(@RequestParam("bookingId") String bookingId) {
         Booking booking = bookingRepository.findById(bookingId).orElse(null);
         List<HairService> listService = booking.getBookingDetailList().stream().map((item)->item.getHairService()).
-               filter((item)-> !item.getServiceId().equals("SER011")).collect(Collectors.toList());
+                filter((item)-> !item.getServiceId().equals("SER011")).collect(Collectors.toList());
         Map<String, Object> response = new HashMap<>();
         String stylist = bookingDetailRepository.getStylist(bookingId).get(0).getEmployee().getEmployeeId();
         String skinner= bookingDetailRepository.getSkinnerlist(bookingId).get(0).getEmployee().getEmployeeId();

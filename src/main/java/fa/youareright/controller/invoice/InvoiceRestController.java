@@ -1,6 +1,7 @@
 package fa.youareright.controller.invoice;
 
 import fa.youareright.dto.ListServiceResponse;
+import fa.youareright.dto.ListServiceResponsePayment;
 import fa.youareright.model.Booking;
 import fa.youareright.model.BookingDetail;
 import fa.youareright.repository.BookingDetailRepository;
@@ -56,4 +57,24 @@ public class InvoiceRestController {
     public ResponseEntity<?> getListBookingById(@PathVariable String bookingId) {
         return new ResponseEntity<>(bookingRepository.findById(bookingId), HttpStatus.OK);
     }
+
+    @GetMapping("/details")
+    public ResponseEntity<?> getDetails(@RequestParam(name= "id") String bookingId) {
+        Booking booking = bookingService.findById(bookingId);
+        List<ListServiceResponsePayment> service = booking.getBookingDetailList().stream().map(item->
+                new ListServiceResponsePayment(item.getHairService().getServiceId(),item.getHairService().getName(),item.getEmployee().getUser().getFullName(),
+                        item.getHairService().getPrice()) ).collect(Collectors.toList());
+        double total = service.stream().mapToDouble(ListServiceResponsePayment:: getPrice).sum();
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("id", booking.getBookingId());
+        resp.put("date", booking.getBookingDate());
+        resp.put("time", booking.getBookingDetailList().get(0).getWorkingTime().getTimeZone());
+        resp.put("name", booking.getName());
+        resp.put("branch", booking.getBranch().getName());
+        resp.put("service",service);
+        resp.put("total", total);
+
+        return new ResponseEntity<>(resp,HttpStatus.OK);
+    }
+
 }
