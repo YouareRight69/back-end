@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public interface BookingDetailRepository extends JpaRepository<BookingDetail,String> {
@@ -26,7 +27,9 @@ public interface BookingDetailRepository extends JpaRepository<BookingDetail,Str
     @Query(value="delete from BookingDetail bd where bd.booking.bookingId = :bookingId")
     int deleteBookingDetailByBookingId(@Param("bookingId") String bookingId);
 
-    List<BookingDetail> findByBookingBookingId(String bookingId);
+  @Query(value="select bd from BookingDetail bd where bd.workingTime.workingTimeId = :time and bd.employee.employeeId = :empId " +
+          "and bd.booking.bookingDate = :date")
+    List<BookingDetail> checkExistBooking(@Param("time") String time, @Param("empId")  String empId, @Param("date")  LocalDate date);
 
 
 }

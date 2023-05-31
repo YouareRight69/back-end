@@ -37,10 +37,11 @@ public class BookingRestController {
     private HairServiceRepository hairServiceRepository;
     @Autowired
     private BookingService bookingService;
-
+    private static final int ISDELETE = 0;
     @GetMapping("info/list-branch")
     public ResponseEntity<?> getListBranch() {
-        return new ResponseEntity<>(branchRepository.findByIsDelete(0), HttpStatus.OK);
+
+        return new ResponseEntity<>(branchRepository.findByIsDelete(ISDELETE), HttpStatus.OK);
     }
 
     @GetMapping("info/list-employee-of-branch")
@@ -66,6 +67,11 @@ public class BookingRestController {
     @PostMapping("create")
     @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST"})
     public ResponseEntity<?> createBooking(@RequestBody BookingDTO bookingDTO) {
+        boolean isBooking = bookingDetailRepository.checkExistBooking(bookingDTO.getWorkTimeId(),bookingDTO.getStyleId(),
+                LocalDate.parse(bookingDTO.getBookingDate())).isEmpty();
+        if(!isBooking) {
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        }
         Booking booking = bookingService.saveBookingAndBookingDetail(bookingDTO);
         return new ResponseEntity<>(booking, HttpStatus.OK);
     }
@@ -90,6 +96,7 @@ public class BookingRestController {
         response.put("userId",booking.getUser().getUserId());
         response.put("workTimeId",bookingDetailRepository.getStylist(bookingId).get(0).getWorkingTime().getWorkingTimeId());
         response.put("note",booking.getNote());
+        response.put("customerName",booking.getName());
 
         return  new ResponseEntity<>(response,HttpStatus.OK);
     }

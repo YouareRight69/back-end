@@ -100,12 +100,14 @@ public class HairServiceController {
         return new ResponseEntity<>(hairService.orElse(null), HttpStatus.OK);
     }
 
+
     /**
      * @param serviceId, hairServiceDto
      * @return if success status 2xx else if error status 4xx
      * @Creator HuyenTN2
      * @Date 30/05/2023
      */
+
 
     @PatchMapping("/{serviceId}")
     @RolesAllowed({"ROLE_ADMIN"})
@@ -121,12 +123,12 @@ public class HairServiceController {
         if (hairServices == null) {
             return new ResponseEntity<>("HairService not found", HttpStatus.NOT_FOUND);
         }
-
-        // Update properties of hairService using hairServiceDto
         BeanUtils.copyProperties(hairServiceDto, hairServices, getNullPropertyNames(hairServiceDto));
 
-        // Save the updated hairService
         this.hairServiceService.save(hairServices);
+
+        List<Media> existingMedia = mediaRepository.findByHairService(hairServices);
+        List<Media> updatedMedia = new ArrayList<>();
 
         for (String url : hairServiceDto.getMedia()) {
             Media media = new Media();
@@ -136,9 +138,13 @@ public class HairServiceController {
             mediaRepository.save(media);
         }
 
-        return new ResponseEntity<>(hairService.get(), HttpStatus.OK);
-    }
 
+        return new ResponseEntity<>(hairService.get(), HttpStatus.OK);
+
+//        mediaRepository.saveAll(updatedMedia);
+//        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
     private String[] getNullPropertyNames(Object source) {
         final BeanWrapper wrappedSource = new BeanWrapperImpl(source);
         return Stream.of(wrappedSource.getPropertyDescriptors())
@@ -147,12 +153,14 @@ public class HairServiceController {
                 .toArray(String[]::new);
     }
 
+
     /**
      * @param serviceId
      * @return if success status 2xx else if error status 4xx
      * @Creator HuyenTN2
      * @Date 30/05/2023
      */
+
 
     @DeleteMapping("/{serviceId}")
     @RolesAllowed({"ROLE_ADMIN"})
@@ -162,7 +170,8 @@ public class HairServiceController {
         if (!hairService.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
+    
+        
         hairServiceService.delete(serviceId);
         return new ResponseEntity(HttpStatus.OK);
     }

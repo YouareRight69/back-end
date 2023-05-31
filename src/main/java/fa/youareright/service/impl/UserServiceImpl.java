@@ -1,6 +1,5 @@
 package fa.youareright.service.impl;
 
-import fa.youareright.model.HairService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -86,6 +85,13 @@ public class UserServiceImpl implements UserService {
     public void updateStatus(String userId) {
         userRepository.updateStatus(userId);
     }
+
+
+
+//	@Override
+//	public User findByEmpId(String employeeId) {
+//		return userRepository.findByEmpId(employeeId).get();
+//	}
 
 
 }

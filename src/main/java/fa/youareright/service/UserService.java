@@ -14,7 +14,12 @@ public interface UserService {
 
     String getLastUserId();
 
-    String getNextId(String inputId);
+
+//    String getNextId(String inputId);
+
+
+	String getNextId(String inputId);
+
 
     void saveNamNB6(User user);
 
@@ -38,5 +43,6 @@ public interface UserService {
     User findByEmpId(String employeeId);
 
     void updateStatus(String userId);
+
 
 }

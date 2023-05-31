@@ -11,7 +11,7 @@ public interface BookingService {
     Booking updateBookingAndBookingDetail(BookingDTO bookingDTO,String bookingId);
 
     Page<Booking> findAll(String bookingId, String name, Pageable pageable);
-
+    Page<Booking> findAllByCustomer(String bookingId, String name, Pageable pageable);
     int deleteBooking( String bookingId );
 
     Booking findById(String id);
