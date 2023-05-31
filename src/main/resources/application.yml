@@ -15,13 +15,9 @@ app:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-<<<<<<< HEAD
-    password:
-    url: jdbc:mysql://localhost:3306/youarerighttest
-=======
-    password: Namfanmu281999
+    password: 123456
     url: jdbc:mysql://localhost:3306/youareright
->>>>>>> cd15a3325b64c6630c9b643dbfac9b55cf20fbba
+
     username: root
   jpa:
     hibernate:

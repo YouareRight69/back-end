@@ -58,7 +58,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http.authorizeRequests()
 				.antMatchers("/auth/login", "/oauth2/**", "/forgotPassword", "/confirmOtp", "/forgot-changePassword",
-						"/register")
+						"/register", "/api/**")
 				.permitAll().anyRequest().authenticated().and().oauth2Login().userInfoEndpoint()
 				.userService(customerOAuth2UserService);
 
