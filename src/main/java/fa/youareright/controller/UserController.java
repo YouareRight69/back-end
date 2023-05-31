@@ -84,4 +84,21 @@ public class UserController {
 //        }
 //        return new ResponseEntity<>(users, HttpStatus.OK);
 //    }
+
+    /**
+     * @param userId
+     * @return if success status 2xx else if error status 4xx
+     * @Creator HuyenTN2
+     * @Date 30/05/2023
+     */
+    @PutMapping("/{userId}")
+    @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST"})
+    public ResponseEntity<User> updateStatus(@PathVariable String userId) {
+        User user = userService.findByUserId(userId);
+        if (user== null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        userService.updateStatus(userId);
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }

@@ -33,7 +33,7 @@ public interface UserRepository extends JpaRepository<User, String> {
                     @Param("dateOfBirth") LocalDate dateOfBirth, @Param("fullName") String fullName,
                     @Param("phoneNumber") String phoneNumber, @Param("userId") String userId);
 
-    @Query(value = "select u from User u where (u.fullName like concat('%',:fullName,'%') or u.address like concat('%',:address,'%'))")
+    @Query(value = "select u from User u where (u.fullName like concat('%',:fullName,'%') or u.address like concat('%',:address,'%')) and u.status = '1'")
     Page<User> findAllByUser(@Param("fullName") String fullName,
                              @Param("address") String address,
                              Pageable pageable);
@@ -47,6 +47,13 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query(value = "select user.user_id from employee " +
             "inner join user on user.user_id = employee.user_id where employee.emp_id = :employeeId	", nativeQuery = true)
     Optional<User> findByEmpId(@Param("employeeId") String employeeId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update User u set u.status = '0' " +
+            "where u.userId = :userId")
+    void updateStatus(@Param("userId") String userId);
+
 
 }
 	
