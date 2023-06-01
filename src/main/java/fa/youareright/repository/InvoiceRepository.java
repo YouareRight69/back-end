@@ -73,5 +73,9 @@ public interface InvoiceRepository extends JpaRepository<Invoice,String> {
 	@Transactional
 	@Query(value="update Invoice c set c.status = '1' where c.booking.bookingId = :bookingId")
 	int thanhToanInvoice(@Param("bookingId") String bookingId );
+	
+	@Query(value ="select i from Invoice i where i.booking.user.userId = :id and i.isDelete = 0")
+	Page<Invoice> getListInvoiceByCustomer(@Param("id") String id, Pageable page);
+	
 
 }
