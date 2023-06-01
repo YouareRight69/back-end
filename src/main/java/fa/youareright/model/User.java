@@ -49,6 +49,7 @@ public class User {
     private Employee employee;
 
     @OneToMany(mappedBy = "user")
+    @JsonBackReference
     private List<Invoice> invoiceList;
 
     public User(String userId) {

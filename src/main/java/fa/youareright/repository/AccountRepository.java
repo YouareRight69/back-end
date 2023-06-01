@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import fa.youareright.model.Account;
 
-public interface AccountRepository extends JpaRepository<Account, String> {
+public interface AccountRepository extends JpaRepository<Account, Integer> {
 	Optional<Account> findByUsername(String username);
 
 	Optional<Account> findByEmail(String email);

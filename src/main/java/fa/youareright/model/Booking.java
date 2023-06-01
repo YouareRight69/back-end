@@ -42,6 +42,7 @@ public class Booking {
     private List<BookingDetail> bookingDetailList;
 
     @OneToOne(mappedBy = "booking")
+    @JsonBackReference
     private Invoice invoice;
 
     @ManyToOne

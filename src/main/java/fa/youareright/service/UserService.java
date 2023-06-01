@@ -13,6 +13,7 @@ public interface UserService {
 
 	String getLastUserId();
 
+
 	String getNextId(String inputId);
 
 	void saveNamNB6(User user);
@@ -26,5 +27,6 @@ public interface UserService {
 	void save(User user);
 	User findByUserId(String userId);
 	User findByEmpId(String employeeId);
+
 
 }

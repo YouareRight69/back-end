@@ -19,7 +19,7 @@ import java.util.*;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/api/payment")
+@RequestMapping("/api/payment/vnpay")
 public class PaymentRestController {
     @Autowired
     HttpServletRequest req;
@@ -27,17 +27,17 @@ public class PaymentRestController {
     @Autowired
     HttpServletResponse resp;
 
-    @GetMapping("/{amountTotal}")
+    @GetMapping("/{amountTotal}/{bookingId}")
     public ResponseEntity<?> test(@PathVariable("amountTotal") Integer amountTotal
-//            ,@PathVariable("bookingId") String bookingId
+            ,@PathVariable("bookingId") String bookingId
     ) throws UnsupportedEncodingException {
 
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String vnp_OrderInfo = "Thanh toan";
         String orderType = "other";
-        String vnp_TxnRef = ConfigVnpay.getRandomNumber(8);
-//        String vnp_TxnRef = bookingId;
+//        String vnp_TxnRef = ConfigVnpay.getRandomNumber(8);
+        String vnp_TxnRef = bookingId;
 //        String vnp_IpAddr = Config.getIpAddress(req);
         String vnp_IpAddr = "118.69.73.134";
         String vnp_TmnCode = ConfigVnpay.vnp_TmnCode;

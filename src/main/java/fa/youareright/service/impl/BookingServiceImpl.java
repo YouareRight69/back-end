@@ -7,7 +7,9 @@ import fa.youareright.repository.*;
 import fa.youareright.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +56,8 @@ public class BookingServiceImpl implements BookingService {
             } else
                 bookingDetailRepository.save(new BookingDetail(
                         bookingDTO.getIsDelete(),
-                        hairServiceRepository.findById(item).orElse(null), booking,
+                        hairServiceRepository.findById(item).orElse(null),
+                        booking,
                         employeeRepository.findById(bookingDTO.getSkinnerId()).orElse(null),
                         workingTimeRepository.findById(bookingDTO.getWorkTimeId()).orElse(null)));
         });
@@ -96,6 +99,10 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Page<Booking> findAll(String bookingId, String name, Pageable pageable) {
+        Pageable sortPage = pageable;
+        Sort sort = Sort.by(Sort.Direction.ASC,"bookingDate");
+        sortPage = PageRequest.of(pageable.getPageNumber(),pageable.getPageSize(),sort);
+
         Specification<Booking> spec = Specification.where(null);
         if (bookingId != null && !bookingId.trim().isEmpty()) {
             spec = spec.or((root, query, builder) -> builder.like(root.get("bookingId"), "%" + bookingId + "%"));
@@ -107,10 +114,35 @@ public class BookingServiceImpl implements BookingService {
 
         Page<Booking> result;
         if (spec.equals(Specification.where(null))) {
-            result = bookingRepository.findAll(pageable);
+            result = bookingRepository.findAll(sortPage);
         } else {
-            result = bookingRepository.findAll(spec, pageable);
+            result = bookingRepository.findAll(spec, sortPage);
         }
+
+        return result;
+    }
+    @Override
+    public Page<Booking> findAllByCustomer(String bookingId, String name, Pageable pageable) {
+        Pageable sortPage = pageable;
+        Sort sort = Sort.by(Sort.Direction.ASC,"bookingDate");
+        sortPage = PageRequest.of(pageable.getPageNumber(),pageable.getPageSize(),sort);
+
+        Specification<Booking> spec = Specification.where(null);
+        if (bookingId != null && !bookingId.trim().isEmpty()) {
+            spec = spec.or((root, query, builder) -> builder.like(root.get("bookingId"), "%" + bookingId + "%"));
+        }
+        if (name != null && !name.trim().isEmpty()) {
+            spec = spec.and((root, query, builder) -> builder.like(root.get("name"), "%" + name + "%"));
+        }
+        spec = spec.and((root, query, builder) -> builder.equal(root.get("isDelete"), 0));
+
+        Page<Booking> result;
+        if (spec.equals(Specification.where(null))) {
+            result = bookingRepository.findAll(sortPage);
+        } else {
+            result = bookingRepository.findAll(spec, sortPage);
+        }
+
         return result;
     }
 
