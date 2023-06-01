@@ -44,7 +44,7 @@ public class BookingManagementRestController {
                                             @RequestParam(defaultValue = "0", name = "p") int page,
                                             @RequestParam(defaultValue = "5") int size, Principal principal){
         PageRequest pageable = PageRequest.of(page, size);
-      int accountId= ((Account)(((Authentication) principal).getPrincipal())).getAccountId();
+        int accountId= ((Account)(((Authentication) principal).getPrincipal())).getAccountId();
         boolean checkRole = ((Account)(((Authentication) principal).getPrincipal())).getRoles()
                 .stream().map(x -> x.getName())
                 .collect(Collectors.joining()).contains("ROLE_CUSTOMER");
