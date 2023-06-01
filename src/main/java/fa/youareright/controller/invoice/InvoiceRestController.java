@@ -69,6 +69,7 @@ public class InvoiceRestController {
     }
 
     @GetMapping("/details")
+    @RolesAllowed({"ROLE_CUSTOMER","ROLE_ADMIN","ROLE_RECEPTIONIST"})
     public ResponseEntity<?> getDetails(@RequestParam(name= "id") String bookingId) {
         Booking booking = bookingService.findById(bookingId);
         List<ListServiceResponsePayment> service = booking.getBookingDetailList().stream().map(item->

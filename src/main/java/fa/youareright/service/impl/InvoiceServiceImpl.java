@@ -140,9 +140,9 @@ public class InvoiceServiceImpl implements InvoiceService {
         if (invoiceId != null && !invoiceId.trim().isEmpty()) {
             spec = spec.or((root, query, builder) -> builder.like(root.get("invoiceId"), "%" + invoiceId + "%"));
         }
-//        if (name != null && !name.trim().isEmpty()) {
-//            spec = spec.and((root, query, builder) -> builder.like(root.get("userId"), "%" + name + "%"));
-//        }
+        if (name != null && !name.trim().isEmpty()) {
+            spec = spec.and((root, query, builder) -> builder.like(root.get("user").get("userId"),  name ));
+        }
         spec = spec.and((root, query, builder) -> builder.equal(root.get("isDelete"), 0));
 
         Page<Invoice> result;

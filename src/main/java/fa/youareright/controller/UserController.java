@@ -5,6 +5,7 @@ import fa.youareright.dto.UserDto;
 import fa.youareright.model.Account;
 import fa.youareright.model.HairService;
 import fa.youareright.model.User;
+import fa.youareright.repository.UserRepository;
 import fa.youareright.service.AccountService;
 import fa.youareright.service.UserService;
 import org.springframework.beans.BeanUtils;
@@ -32,6 +33,9 @@ public class UserController {
     UserService userService;
 
     @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     AccountService accountService;
 
     /**
@@ -42,7 +46,7 @@ public class UserController {
      */
 
     @GetMapping("")
-    @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST"})
+    @RolesAllowed({"ROLE_ADMIN", "ROLE_RECEPTIONIST"})
     public ResponseEntity<Page<User>> findAllByCondition(
             @RequestParam(value = "c", defaultValue = "") String condition,
             @RequestParam(name = "p", defaultValue = "0") Integer page) {
@@ -70,7 +74,7 @@ public class UserController {
     }
 
     @PostMapping("/updateInfo")
-    public ResponseEntity<?> updateInfo(){
+    public ResponseEntity<?> updateInfo() {
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -92,13 +96,33 @@ public class UserController {
      * @Date 30/05/2023
      */
     @PutMapping("/{userId}")
-    @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST"})
+    @RolesAllowed({"ROLE_ADMIN", "ROLE_RECEPTIONIST", "ROLE_CUSTOMER"})
     public ResponseEntity<User> updateStatus(@PathVariable String userId) {
         User user = userService.findByUserId(userId);
-        if (user== null) {
+        if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        userService.updateStatus(userId);
         return new ResponseEntity(HttpStatus.OK);
     }
+
+
+
+
+    @GetMapping("findAll")
+    public ResponseEntity<List<User>> findAll() {
+        List<User> listEmp = userRepository.findAllEmp();
+        if (listEmp.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(listEmp, HttpStatus.OK);
+    }
+
+    @GetMapping("/detail/{idUser}")
+    @RolesAllowed({"ROLE_CUSTOMER","ROLE_ADMIN","ROLE_RECEPTIONIST"})
+    public ResponseEntity<User> getUserById(@PathVariable String idUser) {
+        Optional<User> user = userRepository.findById(idUser);
+
+        return new ResponseEntity( user, HttpStatus.OK);
+    }
+
 }
