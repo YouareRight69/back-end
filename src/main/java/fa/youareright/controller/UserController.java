@@ -5,6 +5,7 @@ import fa.youareright.dto.UserDto;
 import fa.youareright.model.Account;
 import fa.youareright.model.HairService;
 import fa.youareright.model.User;
+import fa.youareright.repository.UserRepository;
 import fa.youareright.service.AccountService;
 import fa.youareright.service.UserService;
 import org.springframework.beans.BeanUtils;
@@ -30,6 +31,9 @@ import java.util.Optional;
 public class UserController {
     @Autowired
     UserService userService;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     AccountService accountService;
@@ -70,7 +74,7 @@ public class UserController {
     }
 
     @PostMapping("/updateInfo")
-    public ResponseEntity<?> updateInfo(){
+    public ResponseEntity<?> updateInfo() {
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -95,10 +99,18 @@ public class UserController {
     @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST"})
     public ResponseEntity<User> updateStatus(@PathVariable String userId) {
         User user = userService.findByUserId(userId);
-        if (user== null) {
+        if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        userService.updateStatus(userId);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("findAll")
+    public ResponseEntity<List<User>> findAll() {
+        List<User> listEmp = userRepository.findAllEmp();
+        if (listEmp.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(listEmp, HttpStatus.OK);
     }
 }
