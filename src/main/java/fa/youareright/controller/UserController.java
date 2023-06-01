@@ -42,7 +42,7 @@ public class UserController {
      */
 
     @GetMapping("")
-    @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST"})
+    @RolesAllowed({"ROLE_ADMIN", "ROLE_RECEPTIONIST"})
     public ResponseEntity<Page<User>> findAllByCondition(
             @RequestParam(value = "c", defaultValue = "") String condition,
             @RequestParam(name = "p", defaultValue = "0") Integer page) {
@@ -92,7 +92,7 @@ public class UserController {
      * @Date 30/05/2023
      */
     @PutMapping("/{userId}")
-    @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST"})
+    @RolesAllowed({"ROLE_ADMIN", "ROLE_RECEPTIONIST"})
     public ResponseEntity<User> updateStatus(@PathVariable String userId) {
         User user = userService.findByUserId(userId);
         if (user== null) {
