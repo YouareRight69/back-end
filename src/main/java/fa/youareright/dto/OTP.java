@@ -1,5 +1,7 @@
 package fa.youareright.dto;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,10 +11,12 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountDto {
-    private String accountId;
-    private String userName;
-    private String password;
-    private UserDto userDto;
-//    private List<AccountRole> accountRoleList;
+public class OTP {
+	
+	private String otp;
+
+	private String email;
+	
+	private LocalDateTime timeExp;
+
 }

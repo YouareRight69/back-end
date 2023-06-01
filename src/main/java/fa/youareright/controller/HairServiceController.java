@@ -16,12 +16,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.beans.FeatureDescriptor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+
 
 @RestController
 @RequestMapping("/api/hairService")
@@ -32,20 +34,34 @@ public class HairServiceController {
     HairServiceService hairServiceService;
 
     @Autowired
-    private HairServiceRepository hairServiceRepository;
-
-    @Autowired
     MediaRepository mediaRepository;
 
+    /**
+     * @param page, condition
+     * @return listAll()
+     * @Creator HuyenTN2
+     * @Date 30/05/2023
+     */
+
     @GetMapping("")
+    @RolesAllowed({"ROLE_ADMIN"})
     public ResponseEntity<Page<HairService>> findAllByCondition(
             @RequestParam(value = "c", defaultValue = "") String condition,
             @RequestParam(name = "p", defaultValue = "0") Integer page) {
         return new ResponseEntity<>(hairServiceService.listAll(condition, PageRequest.of(page, 5)), HttpStatus.OK);
     }
 
+    /**
+     * @param hairServiceDto, bindingResult
+     * @return if success status 2xx else if error status 4xx
+     * @Creator HuyenTN2
+     * @Date 30/05/2023
+     */
+
     @PostMapping("")
-    public ResponseEntity<?> create(@RequestBody @Valid HairServiceDto hairServiceDto, BindingResult bindingResult) {
+    @RolesAllowed({"ROLE_ADMIN"})
+    public ResponseEntity<?> create(@RequestBody @Valid HairServiceDto hairServiceDto,
+                                    BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(bindingResult.getFieldErrors(), HttpStatus.NOT_ACCEPTABLE);
@@ -63,10 +79,18 @@ public class HairServiceController {
             mediaRepository.save(media);
         }
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(hairServiceDto, HttpStatus.OK);
     }
 
+    /**
+     * @param serviceId
+     * @return if success status 2xx else if error status 4xx
+     * @Creator HuyenTN2
+     * @Date 30/05/2023
+     */
+
     @GetMapping("/{serviceId}")
+    @RolesAllowed({"ROLE_ADMIN"})
     public ResponseEntity<HairService> findById(@PathVariable String serviceId) {
         Optional<HairService> hairService = hairServiceService.findById(serviceId);
 
@@ -76,34 +100,20 @@ public class HairServiceController {
         return new ResponseEntity<>(hairService.orElse(null), HttpStatus.OK);
     }
 
-//    @PatchMapping("/{serviceId}")
-//    public ResponseEntity<HairService> update(@PathVariable String serviceId,
-//                                              @Valid @RequestBody HairServiceDto hairServiceDto,
-//                                              BindingResult bindingResult) {
-//        Optional<HairService> currentHairService = hairServiceService.findById(serviceId);
-//
-//        if (bindingResult.hasFieldErrors()) {
-//            return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
-//        }
-//
-//        if (!currentHairService.isPresent()) {
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        }
-//
-//        currentHairService.get().setServiceId(hairServiceDto.getServiceId());
-//        currentHairService.get().setName(hairServiceDto.getName());
-//        currentHairService.get().setPrice(hairServiceDto.getPrice());
-//        currentHairService.get().setDescription(hairServiceDto.getDescription());
-//        currentHairService.get().setType(hairServiceDto.getType());
-//        currentHairService.get().setMedia(hairServiceDto.getMedia());
-//
-//        hairServiceService.save(currentHairService.get());
-//
-//        return new ResponseEntity<>(currentHairService.get(), HttpStatus.OK);
-//    }
+
+    /**
+     * @param serviceId, hairServiceDto
+     * @return if success status 2xx else if error status 4xx
+     * @Creator HuyenTN2
+     * @Date 30/05/2023
+     */
+
 
     @PatchMapping("/{serviceId}")
-    public ResponseEntity<?> update(@PathVariable("serviceId") String serviceId, @RequestBody @Valid HairServiceDto hairServiceDto, BindingResult bindingResult) {
+    @RolesAllowed({"ROLE_ADMIN"})
+    public ResponseEntity<?> update(@PathVariable("serviceId") String serviceId,
+                                    @RequestBody @Valid HairServiceDto hairServiceDto,
+                                    BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(bindingResult.getFieldErrors(), HttpStatus.NOT_ACCEPTABLE);
         }
@@ -113,34 +123,28 @@ public class HairServiceController {
         if (hairServices == null) {
             return new ResponseEntity<>("HairService not found", HttpStatus.NOT_FOUND);
         }
-
-        // Update properties of hairService using hairServiceDto
         BeanUtils.copyProperties(hairServiceDto, hairServices, getNullPropertyNames(hairServiceDto));
 
-        // Save the updated hairService
         this.hairServiceService.save(hairServices);
 
-        // Update media for the hairService
         List<Media> existingMedia = mediaRepository.findByHairService(hairServices);
         List<Media> updatedMedia = new ArrayList<>();
 
         for (String url : hairServiceDto.getMedia()) {
-            Media media = existingMedia.stream()
-                    .filter(m -> m.getUrl().equals(url))
-                    .findFirst()
-                    .orElseGet(() -> new Media());
-
+            Media media = new Media();
             BeanUtils.copyProperties(hairServiceDto, media, "media");
             media.setUrl(url);
             media.setHairService(hairServices);
-            updatedMedia.add(media);
+            mediaRepository.save(media);
         }
 
-        mediaRepository.saveAll(updatedMedia);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(hairService.get(), HttpStatus.OK);
+
+//        mediaRepository.saveAll(updatedMedia);
+//        return new ResponseEntity<>(HttpStatus.OK);
+
     }
-
     private String[] getNullPropertyNames(Object source) {
         final BeanWrapper wrappedSource = new BeanWrapperImpl(source);
         return Stream.of(wrappedSource.getPropertyDescriptors())
@@ -150,14 +154,24 @@ public class HairServiceController {
     }
 
 
+    /**
+     * @param serviceId
+     * @return if success status 2xx else if error status 4xx
+     * @Creator HuyenTN2
+     * @Date 30/05/2023
+     */
+
+
     @DeleteMapping("/{serviceId}")
+    @RolesAllowed({"ROLE_ADMIN"})
     public ResponseEntity<Void> delete(@PathVariable String serviceId) {
         Optional<HairService> hairService = hairServiceService.findById(serviceId);
 
-        if (hairService == null) {
+        if (!hairService.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
+    
+        
         hairServiceService.delete(serviceId);
         return new ResponseEntity(HttpStatus.OK);
     }
