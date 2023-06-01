@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -90,6 +91,7 @@ public class InvoiceRestController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createInvoice(@RequestBody InvoiceDTO invoiceDTO) {
+
         boolean isInvoice = invoiceRepository.checkExistInvoice(invoiceDTO.getBookingId()).isEmpty();
         System.err.println(isInvoice);
         Invoice invoice = null;

@@ -34,7 +34,8 @@ public class PaymentRestController {
 
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
-        String vnp_OrderInfo = "Thanh toan";
+        String thamSo = "Thanh toan " + bookingId;
+        String vnp_OrderInfo = thamSo;
         String orderType = "other";
 //        String vnp_TxnRef = ConfigVnpay.getRandomNumber(8);
         String vnp_TxnRef = bookingId;

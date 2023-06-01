@@ -61,13 +61,16 @@ public class InvoiceManagementRestController {
     }
 
     @GetMapping("/detail/{bookingId}")
+    @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST"})
     public ResponseEntity<?> getDetailInvocie(@PathVariable String bookingId) {
         return new ResponseEntity<>(invoiceRepository.getInvoicesByBookingId(bookingId), HttpStatus.OK);
     }
 
     @PatchMapping("/success/{bookingId}")
+//    @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST"})
     public ResponseEntity<?> thanhToanInvoice(@PathVariable String bookingId) {
         invoiceRepository.thanhToanInvoice(bookingId);
+        System.err.println("vaf thanh toan" + bookingId);
             return new ResponseEntity<>("Thanh toán thành công", HttpStatus.OK);
 
     }

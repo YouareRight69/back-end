@@ -14,6 +14,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -42,12 +44,12 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     @Transactional
     public Invoice saveInvoiceAndInvoiceDetail(InvoiceDTO invoiceDTO) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         Invoice invoice = invoiceRepository
                 .save(new Invoice(invoiceDTO.getIsDelete(),
                         userRepository.findById(invoiceDTO.getUserId()).orElse(null),
                         bookingRepository.findById(invoiceDTO.getBookingId()).orElse(null),
-                        LocalDateTime.parse(invoiceDTO.getInvoiceTime(), formatter),
+                        timestamp.toLocalDateTime(),
                         Float.parseFloat(invoiceDTO.getTotal()),
                         invoiceDTO.getStatus()
                 ));
@@ -75,11 +77,11 @@ public class InvoiceServiceImpl implements InvoiceService {
     public Invoice updateInvoiceAndInvoiceDetail(InvoiceDTO invoiceDTO) {
         String invoiceId = invoiceRepository.findInvoiceIdByBookingId(invoiceDTO.getBookingId());
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());;
         Invoice invoice = new Invoice(invoiceDTO.getIsDelete(),
                         userRepository.findById(invoiceDTO.getUserId()).orElse(null),
                         bookingRepository.findById(invoiceDTO.getBookingId()).orElse(null),
-                        LocalDateTime.parse(invoiceDTO.getInvoiceTime(), formatter),
+                timestamp.toLocalDateTime(),
                         Float.parseFloat(invoiceDTO.getTotal()),
                         invoiceDTO.getStatus());
         invoice.setInvoiceId(invoiceId);
@@ -138,9 +140,9 @@ public class InvoiceServiceImpl implements InvoiceService {
         if (invoiceId != null && !invoiceId.trim().isEmpty()) {
             spec = spec.or((root, query, builder) -> builder.like(root.get("invoiceId"), "%" + invoiceId + "%"));
         }
-        if (name != null && !name.trim().isEmpty()) {
-            spec = spec.and((root, query, builder) -> builder.like(root.get("userId"), "%" + name + "%"));
-        }
+//        if (name != null && !name.trim().isEmpty()) {
+//            spec = spec.and((root, query, builder) -> builder.like(root.get("userId"), "%" + name + "%"));
+//        }
         spec = spec.and((root, query, builder) -> builder.equal(root.get("isDelete"), 0));
 
         Page<Invoice> result;

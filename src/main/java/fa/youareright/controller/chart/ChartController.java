@@ -15,13 +15,14 @@ import fa.youareright.repository.Total;
 import fa.youareright.repository.UserRepository;
 import fa.youareright.repository.UserTotal;
 
+import javax.annotation.security.RolesAllowed;
+
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/admin/chart")
 public class ChartController {
 
-	
-	
+
 	@Autowired
 	private InvoiceRepository invoiceRepository;
 	
@@ -30,22 +31,26 @@ public class ChartController {
 	private UserRepository userRepository;
 	
 	@GetMapping("/total")
+	@RolesAllowed("ROLE_ADMIN")
 	List<Total> listAll(){
 		return invoiceRepository.getTotal();
 	}
 	
 	@GetMapping("/chart")
+	@RolesAllowed("ROLE_ADMIN")
 	List<Chart> listAllUser(){
 		return invoiceRepository.getAll();
 	}
 	
 	
 	@GetMapping("/limmit")
+	@RolesAllowed("ROLE_ADMIN")
 	List<Total> listAllLimit(){
 		return invoiceRepository.getLimit();
 	}
 	
 	@GetMapping("/totalUser")
+	@RolesAllowed("ROLE_ADMIN")
 	List<UserTotal> listAlluser(){
 		return  userRepository.getCountUser();
 	}

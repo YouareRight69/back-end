@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,7 @@ public class BranchRestController {
     BookingDetailRepository bookingDetailRepository;
 
     @GetMapping("")
+    @RolesAllowed({"ROLE_ADMIN", "ROLE_RECEPTIONIST"})
     public ResponseEntity<Page<Branch>> findAllByCondition(
             @RequestParam(value = "c", defaultValue = "") String condition,
             @RequestParam(name = "p", defaultValue = "0") Integer page) {
@@ -48,6 +50,7 @@ public class BranchRestController {
     }
 
     @PostMapping("")
+    @RolesAllowed({"ROLE_ADMIN", "ROLE_RECEPTIONIST"})
     public ResponseEntity<?> create(@RequestBody @Valid BranchMediaDTO branchMediaDTO, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -70,6 +73,7 @@ public class BranchRestController {
     }
 
     @PatchMapping("/{branchId}")
+    @RolesAllowed({"ROLE_ADMIN", "ROLE_RECEPTIONIST"})
     public ResponseEntity<Branch> update(@PathVariable String branchId,
                                               @Valid @RequestBody BranchMediaDTO branchMediaDTO,
                                               BindingResult bindingResult) {
@@ -101,6 +105,7 @@ public class BranchRestController {
     }
 
     @GetMapping("/{branchId}")
+    @RolesAllowed({"ROLE_ADMIN", "ROLE_RECEPTIONIST", "ROLE_CUSTOMER", "ROLE_EMPLOYEE"})
     public ResponseEntity<Branch> findById(@PathVariable String branchId) {
         Optional<Branch> branch = branchService.findById(branchId);
 
@@ -111,6 +116,7 @@ public class BranchRestController {
     }
 
     @DeleteMapping("/{branchId}")
+    @RolesAllowed({"ROLE_ADMIN", "ROLE_RECEPTIONIST"})
     public ResponseEntity<Branch> delete(@PathVariable String branchId) {
         Optional<Branch> branch = branchService.findById(branchId);
 

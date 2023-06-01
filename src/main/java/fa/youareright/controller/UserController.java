@@ -3,7 +3,6 @@ package fa.youareright.controller;
 import fa.youareright.dto.AccountDto;
 import fa.youareright.dto.UserDto;
 import fa.youareright.model.Account;
-import fa.youareright.model.Branch;
 import fa.youareright.model.User;
 import fa.youareright.repository.UserRepository;
 import fa.youareright.service.AccountService;
@@ -11,14 +10,14 @@ import fa.youareright.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -35,14 +34,18 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
-
+    /**
+     * @param page, condition
+     * @return listAll()
+     * @Creator HuyenTN2
+     * @Date 30/05/2023
+     */
     @GetMapping("")
-    public ResponseEntity<Page<User>> findAll(@PageableDefault(value = 5) Pageable pageable, @RequestParam Optional<String> keyword) {
-        Page<User> users = userService.findAll(pageable, keyword.orElse(""));
-        if (users.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(users, HttpStatus.OK);
+    @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST"})
+    public ResponseEntity<Page<User>> findAllByCondition(
+            @RequestParam(value = "c", defaultValue = "") String condition,
+            @RequestParam(name = "p", defaultValue = "0") Integer page) {
+        return new ResponseEntity<>(userService.listAll(condition, PageRequest.of(page, 5)), HttpStatus.OK);
     }
 
     @PostMapping("/create")
@@ -72,13 +75,30 @@ public class UserController {
     }
 
 
-    @GetMapping("findAll")
-    public ResponseEntity<Page<User>> findAll( ) {
-        Page<User> users = userService.findAll(Pageable.unpaged(),"");
-        if (users.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//    @GetMapping("findAll")
+//    public ResponseEntity<Page<User>> findAll( ) {
+//        Page<User> users = userService.findAll(Pageable.unpaged(),"");
+//        if (users.isEmpty()) {
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        }
+//        return new ResponseEntity<>(users, HttpStatus.OK);
+//    }
+
+    /**
+     * @param userId
+     * @return if success status 2xx else if error status 4xx
+     * @Creator HuyenTN2
+     * @Date 30/05/2023
+     */
+    @PutMapping("/{userId}")
+    @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST"})
+    public ResponseEntity<User> updateStatus(@PathVariable String userId) {
+        User user = userService.findByUserId(userId);
+        if (user== null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        userService.updateStatus(userId);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 
