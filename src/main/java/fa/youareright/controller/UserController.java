@@ -3,14 +3,16 @@ package fa.youareright.controller;
 import fa.youareright.dto.AccountDto;
 import fa.youareright.dto.UserDto;
 import fa.youareright.model.Account;
+import fa.youareright.model.HairService;
 import fa.youareright.model.User;
-import fa.youareright.repository.UserRepository;
 import fa.youareright.service.AccountService;
 import fa.youareright.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -32,14 +34,13 @@ public class UserController {
     @Autowired
     AccountService accountService;
 
-    @Autowired
-    UserRepository userRepository;
     /**
      * @param page, condition
      * @return listAll()
      * @Creator HuyenTN2
      * @Date 30/05/2023
      */
+
     @GetMapping("")
     @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST"})
     public ResponseEntity<Page<User>> findAllByCondition(
@@ -100,16 +101,4 @@ public class UserController {
         userService.updateStatus(userId);
         return new ResponseEntity(HttpStatus.OK);
     }
-
-
-    @GetMapping("/detail")
-    public ResponseEntity<User> findById(@RequestParam(name= "id")  String userId) {
-        Optional<User> user = userRepository.findById(userId);
-
-        if (!userRepository.findById(userId).isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(user.orElse(null), HttpStatus.OK);
-    }
-
 }

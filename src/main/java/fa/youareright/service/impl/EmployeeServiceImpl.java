@@ -1,21 +1,31 @@
 package fa.youareright.service.impl;
 
+import fa.youareright.dto.UpdateEmpDTO;
 import fa.youareright.model.Employee;
 import fa.youareright.repository.EmployeeRepository;
 import fa.youareright.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     EmployeeRepository employeeRepository;
+
     @Override
     public Page<Employee> listAllEmpl(String condition, Pageable pageable) {
         return employeeRepository.listAllEmp(condition, condition, pageable);
     }
+
+//    @Override
+//    public Page<Employee> listAllEmpl(Pageable pageable) {
+//        return employeeRepository.listAllEmp(pageable);
+//    }
 
     @Override
     public void save(Employee employee) {
@@ -38,4 +48,20 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         return prefix + formattedNumber; // Concatenate the prefix and formatted number
     }
+
+    @Override
+    public void updateEmp(UpdateEmpDTO employee) {
+        employeeRepository.updateEmp(employee.getType(), employee.getBranchId(), employee.getEmployeeId());
+    }
+
+    @Override
+    public void delete(String employeeId) {
+        employeeRepository.delete(employeeId);
+    }
+
+    @Override
+    public Optional<Employee> findById(String employeeId) {
+        return employeeRepository.findById(employeeId);
+    }
+
 }
