@@ -13,8 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface HairServiceRepository extends JpaRepository<HairService, String> {
 
-    @Query(value = "select * from hair_service where is_delete = 0 and (name like concat('%',:name,'%') or description like concat('%',:description,'%'))",
-            nativeQuery = true)
+    @Query(value = "select hs from HairService hs where (hs.name like concat('%',:name,'%') or hs.description like concat('%',:description,'%')) and hs.isDelete = 0 order by hs.serviceId desc")
     Page<HairService> findAllByService(@Param("name") String name,
                                        @Param("description") String description,
                                        Pageable pageable);

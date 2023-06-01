@@ -2,6 +2,7 @@ package fa.youareright.controller.employee;
 
 import fa.youareright.dto.BookingDTO;
 import fa.youareright.model.Booking;
+import fa.youareright.model.BookingDetail;
 import fa.youareright.model.HairService;
 import fa.youareright.repository.*;
 import fa.youareright.service.BookingService;
@@ -37,10 +38,11 @@ public class BookingRestController {
     private HairServiceRepository hairServiceRepository;
     @Autowired
     private BookingService bookingService;
-
+    private static final int ISDELETE = 0;
     @GetMapping("info/list-branch")
     public ResponseEntity<?> getListBranch() {
-        return new ResponseEntity<>(branchRepository.findByIsDelete(0), HttpStatus.OK);
+
+        return new ResponseEntity<>(branchRepository.findByIsDelete(ISDELETE), HttpStatus.OK);
     }
 
     @GetMapping("info/list-employee-of-branch")
@@ -66,19 +68,29 @@ public class BookingRestController {
     @PostMapping("create")
     @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST"})
     public ResponseEntity<?> createBooking(@RequestBody BookingDTO bookingDTO) {
+        boolean isBooking = bookingDetailRepository.checkExistBooking(bookingDTO.getWorkTimeId(),bookingDTO.getStyleId(),
+                LocalDate.parse(bookingDTO.getBookingDate())).isEmpty();
+        if(!isBooking) {
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        }
         Booking booking = bookingService.saveBookingAndBookingDetail(bookingDTO);
         return new ResponseEntity<>(booking, HttpStatus.OK);
     }
 
     @GetMapping("/get-booking")
-    @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST"})
     public ResponseEntity<?> getBookingInfo(@RequestParam("bookingId") String bookingId) {
         Booking booking = bookingRepository.findById(bookingId).orElse(null);
         List<HairService> listService = booking.getBookingDetailList().stream().map((item)->item.getHairService()).
-               filter((item)-> !item.getServiceId().equals("SER011")).collect(Collectors.toList());
+                filter((item)-> !item.getServiceId().equals("SER011")).collect(Collectors.toList());
         Map<String, Object> response = new HashMap<>();
-        String stylist = bookingDetailRepository.getStylist(bookingId).get(0).getEmployee().getEmployeeId();
-        String skinner= bookingDetailRepository.getSkinnerlist(bookingId).get(0).getEmployee().getEmployeeId();
+        List<BookingDetail> styleData = bookingDetailRepository.getStylist(bookingId);
+        List<BookingDetail> skinnerData =bookingDetailRepository.getSkinnerlist(bookingId);
+        String stylist = styleData.isEmpty() ? "" :  styleData.get(0).getEmployee().getEmployeeId();
+        String skinner= skinnerData.isEmpty() ? "" : skinnerData.get(0).getEmployee().getEmployeeId();
+        String workTimeId;
+        if(stylist.equals("")) {
+            workTimeId=   bookingDetailRepository.getSkinnerlist(bookingId).get(0).getWorkingTime().getWorkingTimeId();
+        }else workTimeId = styleData.get(0).getWorkingTime().getWorkingTimeId();
 
         response.put("branch",booking.getBranch().getBranchId());
         response.put("bookingId",booking.getBookingId());
@@ -88,8 +100,9 @@ public class BookingRestController {
         response.put("styleId",stylist);
         response.put("skinnerId",skinner);
         response.put("userId",booking.getUser().getUserId());
-        response.put("workTimeId",bookingDetailRepository.getStylist(bookingId).get(0).getWorkingTime().getWorkingTimeId());
+        response.put("workTimeId",workTimeId);
         response.put("note",booking.getNote());
+        response.put("customerName",booking.getName());
 
         return  new ResponseEntity<>(response,HttpStatus.OK);
     }
