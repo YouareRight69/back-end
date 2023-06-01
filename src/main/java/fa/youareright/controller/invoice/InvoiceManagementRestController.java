@@ -33,7 +33,7 @@ public class InvoiceManagementRestController {
 
 
     @GetMapping("")
-    @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST"})
+    @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST", "ROLE_ADMIN"})
     public ResponseEntity<?> getBookingInfo(@RequestParam(required = false, name = "c") String condition,
                                             @RequestParam(defaultValue = "0", name = "p") int page,
                                             @RequestParam(defaultValue = "5") int size, Principal principal){
@@ -55,13 +55,13 @@ public class InvoiceManagementRestController {
     }
 
     @DeleteMapping("/{invoiceId}")
-    @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST"})
+    @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST", "ROLE_ADMIN"})
     public ResponseEntity<?> deleteInvocie(@PathVariable String invoiceId) {
         return new ResponseEntity<>(invoiceService.deleteInvocie(invoiceId), HttpStatus.OK);
     }
 
     @GetMapping("/detail/{bookingId}")
-    @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST"})
+    @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST", "ROLE_ADMIN"})
     public ResponseEntity<?> getDetailInvocie(@PathVariable String bookingId) {
         return new ResponseEntity<>(invoiceRepository.getInvoicesByBookingId(bookingId), HttpStatus.OK);
     }
