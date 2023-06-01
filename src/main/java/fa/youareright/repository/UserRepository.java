@@ -49,12 +49,28 @@ public interface UserRepository extends JpaRepository<User, String> {
 			"inner join user on user.user_id = employee.user_id where employee.emp_id = :employeeId	", nativeQuery = true)
 	Optional<User> findByEmpId(@Param("employeeId") String employeeId);
 
-	@Query( value = "select u.*\n" +
-			"from employee e\n" +
-			"inner join user u on u.user_id = e.user_id\n" +
-			"inner join account acc on acc.account_id = u.account_id\n" +
-			"inner join account_role accr on acc.account_id = accr.account_id\n" +
-			"where accr.role_id = 3;", nativeQuery = true)
+	@Query( value = "SELECT u.*\n" +
+			"FROM user u \n" +
+			"INNER JOIN account acc ON acc.account_id = u.account_id\n" +
+			"INNER JOIN account_role accr ON acc.account_id = accr.account_id\n" +
+			"WHERE accr.role_id = 3\n" +
+			"  AND NOT EXISTS (SELECT 1 FROM employee e2 WHERE e2.user_id = u.user_id);", nativeQuery = true)
 	List<User> findAllEmp();
+
+	@Query( value = "SELECT u.*\n" +
+			"FROM user u \n" +
+			"INNER JOIN account acc ON acc.account_id = u.account_id\n" +
+			"INNER JOIN account_role accr ON acc.account_id = accr.account_id\n" +
+			"WHERE accr.role_id = 2\n" +
+			"  AND NOT EXISTS (SELECT 1 FROM employee e2 WHERE e2.user_id = u.user_id);;", nativeQuery = true)
+	List<User> findAllRec();
+
+	@Query(value = "select u from User u where u.employee.isDelete = 0  and " +
+			"(u.employee.type = '1' or u.employee.type = '2' or u.employee.type = '3' ) and " +
+			"(u.fullName like :fullName or u.employee.branch.name like :branchName)" )
+	Page<User> findAllEmp (@Param("fullName") String fullName, @Param("branchName") String branchName, Pageable pageable);
+
+	@Query(value =" select u from User u where u.employee.employeeId = :empId")
+	User findEmpById(@Param("empId") String id);
 }
 	

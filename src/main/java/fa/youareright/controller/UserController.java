@@ -87,4 +87,13 @@ public class UserController {
         }
         return new ResponseEntity<>(listEmp, HttpStatus.OK);
     }
+
+    @GetMapping("findAllRec")
+    public ResponseEntity<List<User>> findAllRec( ) {
+        List<User> listEmp = userRepository.findAllRec();
+        if (listEmp.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(listEmp, HttpStatus.OK);
+    }
 }

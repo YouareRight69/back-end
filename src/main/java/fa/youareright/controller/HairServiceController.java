@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.beans.FeatureDescriptor;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class HairServiceController {
     MediaRepository mediaRepository;
 
     @GetMapping("")
+
     public ResponseEntity<Page<HairService>> findAllByCondition(
             @RequestParam(value = "c", defaultValue = "") String condition,
             @RequestParam(name = "p", defaultValue = "0") Integer page) {
