@@ -5,6 +5,7 @@ import fa.youareright.dto.UserDto;
 import fa.youareright.model.Account;
 import fa.youareright.model.HairService;
 import fa.youareright.model.User;
+import fa.youareright.repository.UserRepository;
 import fa.youareright.service.AccountService;
 import fa.youareright.service.UserService;
 import org.springframework.beans.BeanUtils;
@@ -30,6 +31,9 @@ import java.util.Optional;
 public class UserController {
     @Autowired
     UserService userService;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     AccountService accountService;
@@ -76,6 +80,7 @@ public class UserController {
     }
 
 
+<<<<<<< HEAD
 //    @GetMapping("findAll")
 //    public ResponseEntity<Page<User>> findAll( ) {
 //        Page<User> users = userService.findAll(Pageable.unpaged(),"");
@@ -97,8 +102,23 @@ public class UserController {
         User user = userService.findByUserId(userId);
         if (user== null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+=======
+    @GetMapping("findAll1")
+    public ResponseEntity<Page<User>> findAll1( ) {
+        Page<User> users = userService.findAll(Pageable.unpaged(),"");
+        if (users.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+>>>>>>> 0923bbd1c211ccd7822215e38ff992d192c48bd3
         }
         userService.updateStatus(userId);
         return new ResponseEntity(HttpStatus.OK);
+    }
+    @GetMapping("findAll")
+    public ResponseEntity<List<User>> findAll( ) {
+        List<User> listEmp = userRepository.findAllEmp();
+        if (listEmp.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(listEmp, HttpStatus.OK);
     }
 }

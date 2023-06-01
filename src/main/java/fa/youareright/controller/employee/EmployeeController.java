@@ -2,6 +2,7 @@ package fa.youareright.controller.employee;
 
 import fa.youareright.dto.EmployeeInfo;
 import fa.youareright.dto.RegisterInfo;
+import fa.youareright.dto.UpdateEmpDTO;
 import fa.youareright.dto.UserAccountDTO;
 import fa.youareright.model.*;
 import fa.youareright.repository.EmployeeRepository;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/employee")
@@ -57,9 +59,12 @@ public class EmployeeController {
 
     @GetMapping("/listAllEmp")
     public ResponseEntity<Page<Employee>> findAllByCondition(
-            @RequestParam(value = "c", defaultValue = "") String condition,
+            @RequestParam(value = "c", defaultValue = "",required = false) String condition,
             @RequestParam(name = "p", defaultValue = "0") Integer page) {
-        return new ResponseEntity<>(employeeService.listAllEmpl((condition), PageRequest.of(page, 5)), HttpStatus.OK);
+//        if("".equals(condition.trim())) {
+            return new ResponseEntity<>(employeeService.listAllEmpl(condition ,PageRequest.of(page, 5)), HttpStatus.OK);
+//        }else
+//        return new ResponseEntity<>(employeeService.listAllEmplCondition(condition, PageRequest.of(page, 5)), HttpStatus.OK);
     }
 
     @PostMapping("/registerEmp")
@@ -157,5 +162,50 @@ public class EmployeeController {
 //
 //        return ResponseEntity.ok(response);
 //    }
+
+    @GetMapping("/edit")
+    public ResponseEntity<?> getEmployee(@RequestParam String employeeId) {
+        Employee emp = employeeRepository.findByEmployeeId(employeeId).get();
+        Map<String, Object> response = new HashMap<>();
+        response.put("employeeId", emp.getEmployeeId());
+        response.put("fullname", emp.getUser().getFullName());
+        response.put("phoneNumber", emp.getUser().getPhoneNumber());
+        response.put("avatar", emp.getUser().getAvatar());
+        response.put("type", emp.getType());
+        response.put("branchId", emp.getBranch().getBranchId());
+        return ResponseEntity.ok(response);
+
+    }
+
+    @PostMapping("/edit")
+    public ResponseEntity<?> updateEmp(@RequestBody UpdateEmpDTO employee) {
+        employeeService.updateEmp(employee);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("msg", "Update successfully.");
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/listAllEmp/{employeeId}")
+    public ResponseEntity<Void> delete(@PathVariable String employeeId) {
+        Optional<Employee> employee = employeeRepository.findById(employeeId);
+
+        if(employee == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        employeeService.delete(employeeId);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/listAllEmp/{employeeId}")
+    public ResponseEntity<Employee> findById(@PathVariable String employeeId) {
+        Optional<Employee> employee = employeeRepository.findByEmployeeId(employeeId);
+
+        if(!employeeRepository.findByEmployeeId(employeeId).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(employee.orElse(null), HttpStatus.OK);
+    }
 
 }
