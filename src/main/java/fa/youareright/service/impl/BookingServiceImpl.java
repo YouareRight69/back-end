@@ -43,7 +43,7 @@ public class BookingServiceImpl implements BookingService {
                         userRepository.findById(bookingDTO.getUserId()).orElse(null),
                         branchRepository.findById(bookingDTO.getBranch()).orElse(null),
                         name));
-       bookingDTO.getServiceList().add("SER011");
+        bookingDTO.getServiceList().add("SER011");
         bookingDTO.getServiceList().stream().forEach((item) -> {
             if (hairServiceRepository.findById(item).orElse(null).getType()
                     .equals(employeeRepository.findById(bookingDTO.getStyleId()).orElse(null).getType())) {
@@ -56,7 +56,8 @@ public class BookingServiceImpl implements BookingService {
             } else
                 bookingDetailRepository.save(new BookingDetail(
                         bookingDTO.getIsDelete(),
-                        hairServiceRepository.findById(item).orElse(null), booking,
+                        hairServiceRepository.findById(item).orElse(null),
+                        booking,
                         employeeRepository.findById(bookingDTO.getSkinnerId()).orElse(null),
                         workingTimeRepository.findById(bookingDTO.getWorkTimeId()).orElse(null)));
         });
@@ -69,11 +70,11 @@ public class BookingServiceImpl implements BookingService {
                 .orElse(null).getFullName() : bookingDTO.getCustomerName();
         int resultDelete = bookingDetailRepository.deleteBookingDetailByBookingId((bookingId));
 
-       Booking bookingDTOData=  new Booking( LocalDate.parse(bookingDTO.getBookingDate()),
+        Booking bookingDTOData=  new Booking( LocalDate.parse(bookingDTO.getBookingDate()),
                 bookingDTO.getIsDelete(), bookingDTO.getNote(),
                 userRepository.findById(bookingDTO.getUserId()).orElse(null),
                 branchRepository.findById(bookingDTO.getBranch()).orElse(null), name);
-       bookingDTOData.setBookingId(bookingId);
+        bookingDTOData.setBookingId(bookingId);
 
         Booking booking = bookingRepository.save(bookingDTOData);
         bookingDTO.getServiceList().add("SER011");
@@ -147,7 +148,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public int deleteBooking(String bookingId) {
-       Booking booking = bookingRepository.findById(bookingId).orElse(null);
+        Booking booking = bookingRepository.findById(bookingId).orElse(null);
         bookingDetailRepository.deleteAll(booking.getBookingDetailList());
         return bookingRepository.deleteBooking(bookingId);
     }

@@ -41,16 +41,16 @@ public interface UserRepository extends JpaRepository<User, String> {
                              @Param("address") String address,
                              Pageable pageable);
 
-<<<<<<< HEAD
+
     @Query(value = "select u from User u where u.employee.branch.branchId like :branch and u.employee.isDelete = 0  ")
     List<User> getListEmployee(@Param("branch") String branch);
-=======
+
 //	@Query(value = "select u from User u where u.account.roles[ro].roleId = 3")
 //	List<User> findEmp();
 
-	@Query(value = "select u from User u where u.employee.branch.branchId like :branch and u.employee.isDelete = 0  ")
-	List<User> getListEmployee(@Param("branch") String branch);
->>>>>>> 0923bbd1c211ccd7822215e38ff992d192c48bd3
+//	@Query(value = "select u from User u where u.employee.branch.branchId like :branch and u.employee.isDelete = 0  ")
+//	List<User> getListEmployee(@Param("branch") String branch);
+
 
     @Query(value = "select * from user where user.user_id = :userId", nativeQuery = true)
     Optional<User> findByUserId(@Param("userId") String userId);
@@ -59,7 +59,7 @@ public interface UserRepository extends JpaRepository<User, String> {
             "inner join user on user.user_id = employee.user_id where employee.emp_id = :employeeId	", nativeQuery = true)
     Optional<User> findByEmpId(@Param("employeeId") String employeeId);
 
-<<<<<<< HEAD
+
     @Modifying
     @Transactional
     @Query(value = "update User u set u.status = '0' " +
@@ -67,20 +67,36 @@ public interface UserRepository extends JpaRepository<User, String> {
     void updateStatus(@Param("userId") String userId);
 
 
-    
- 
+
+
     @Query(value ="select count(full_name) as totalUser from user",nativeQuery = true)
     List<UserTotal> getCountUser();
+
     
-    
-=======
-	@Query( value = "select u.*\n" +
-			"from employee e\n" +
-			"inner join user u on u.user_id = e.user_id\n" +
-			"inner join account acc on acc.account_id = u.account_id\n" +
-			"inner join account_role accr on acc.account_id = accr.account_id\n" +
-			"where accr.role_id = 3;", nativeQuery = true)
+
+	@Query( value = "SELECT u.*\n" +
+			"FROM user u \n" +
+			"INNER JOIN account acc ON acc.account_id = u.account_id\n" +
+			"INNER JOIN account_role accr ON acc.account_id = accr.account_id\n" +
+			"WHERE accr.role_id = 3\n" +
+			"  AND NOT EXISTS (SELECT 1 FROM employee e2 WHERE e2.user_id = u.user_id);", nativeQuery = true)
 	List<User> findAllEmp();
->>>>>>> 0923bbd1c211ccd7822215e38ff992d192c48bd3
+
+
+	@Query( value = "SELECT u.*\n" +
+			"FROM user u \n" +
+			"INNER JOIN account acc ON acc.account_id = u.account_id\n" +
+			"INNER JOIN account_role accr ON acc.account_id = accr.account_id\n" +
+			"WHERE accr.role_id = 2\n" +
+			"  AND NOT EXISTS (SELECT 1 FROM employee e2 WHERE e2.user_id = u.user_id);;", nativeQuery = true)
+	List<User> findAllRec();
+
+	@Query(value = "select u from User u where u.employee.isDelete = 0  and " +
+			"(u.employee.type = '1' or u.employee.type = '2' or u.employee.type = '3' ) and " +
+			"(u.fullName like :fullName or u.employee.branch.name like :branchName)" )
+	Page<User> findAllEmp (@Param("fullName") String fullName, @Param("branchName") String branchName, Pageable pageable);
+
+	@Query(value =" select u from User u where u.employee.employeeId = :empId")
+	User findEmpById(@Param("empId") String id);
+
 }
-	

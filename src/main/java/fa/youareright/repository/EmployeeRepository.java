@@ -58,5 +58,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	@Modifying
 	@Transactional
 	@Query( value = "update Employee e set e.isDelete = 1 where e.employeeId = :employeeId")
-	void delete(@Param("employeeId") String employeeId);
+	void deleteEmpId(@Param("employeeId") String employeeId);
+
 }

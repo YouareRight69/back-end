@@ -3,7 +3,7 @@ package fa.youareright.controller.employee;
 import fa.youareright.dto.BookingDTO;
 import fa.youareright.model.Booking;
 import fa.youareright.model.BookingDetail;
-import fa.youareright.model.Employee;
+
 import fa.youareright.model.HairService;
 import fa.youareright.repository.*;
 import fa.youareright.service.BookingService;
@@ -26,8 +26,6 @@ public class BookingRestController {
     @Autowired
     private BranchRepository branchRepository;
     @Autowired
-    private EmployeeRepository employeeRepository;
-    @Autowired
     private WorkingTimeRepository workingTimeRepository;
     @Autowired
     private UserRepository userRepository;
@@ -35,8 +33,6 @@ public class BookingRestController {
     private BookingDetailRepository bookingDetailRepository;
     @Autowired
     private BookingRepository bookingRepository;
-    @Autowired
-    private HairServiceRepository hairServiceRepository;
     @Autowired
     private BookingService bookingService;
     private static final int ISDELETE = 0;
@@ -80,33 +76,33 @@ public class BookingRestController {
     }
 
     @GetMapping("/get-booking")
-    @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST"})
     public ResponseEntity<?> getBookingInfo(@RequestParam("bookingId") String bookingId) {
         Booking booking = bookingRepository.findById(bookingId).orElse(null);
-        List<HairService> listService = booking.getBookingDetailList().stream().map((item) -> item.getHairService()).
-                filter((item) -> !item.getServiceId().equals("SER011")).collect(Collectors.toList());
+        List<HairService> listService = booking.getBookingDetailList().stream().map((item)->item.getHairService()).
+                filter((item)-> !item.getServiceId().equals("SER011")).collect(Collectors.toList());
         Map<String, Object> response = new HashMap<>();
-        List<BookingDetail> styListdata = bookingDetailRepository.getStylist(bookingId);
-        List<BookingDetail> stySkinnerdata = bookingDetailRepository.getSkinnerlist(bookingId);
-        String stylist = styListdata.isEmpty() ? "" : styListdata.get(0).getEmployee().getEmployeeId();
-        String skinner = stySkinnerdata.isEmpty() ? ""  : stySkinnerdata.get(0).getEmployee().getEmployeeId();
+        List<BookingDetail> styleData = bookingDetailRepository.getStylist(bookingId);
+        List<BookingDetail> skinnerData =bookingDetailRepository.getSkinnerlist(bookingId);
+        String stylist = styleData.isEmpty() ? "" :  styleData.get(0).getEmployee().getEmployeeId();
+        String skinner= skinnerData.isEmpty() ? "" : skinnerData.get(0).getEmployee().getEmployeeId();
         String workTimeId;
-        if (stylist.equals("")) {
-            workTimeId = bookingDetailRepository.getSkinnerlist(bookingId).get(0).getWorkingTime().getWorkingTimeId();
-        } else workTimeId = bookingDetailRepository.getStylist(bookingId).get(0).getWorkingTime().getWorkingTimeId();
-        response.put("branch", booking.getBranch().getBranchId());
-        response.put("bookingId", booking.getBookingId());
-        response.put("bookingDate", booking.getBookingDate());
-        response.put("isDelete", booking.getIsDelete());
-        response.put("serviceList", listService);
-        response.put("styleId", stylist);
-        response.put("skinnerId", skinner);
-        response.put("userId", booking.getUser().getUserId());
-        response.put("workTimeId", workTimeId);
-        response.put("note", booking.getNote());
-        response.put("customerName", booking.getName());
+        if(stylist.equals("")) {
+            workTimeId=   bookingDetailRepository.getSkinnerlist(bookingId).get(0).getWorkingTime().getWorkingTimeId();
+        }else workTimeId = styleData.get(0).getWorkingTime().getWorkingTimeId();
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        response.put("branch",booking.getBranch().getBranchId());
+        response.put("bookingId",booking.getBookingId());
+        response.put("bookingDate",booking.getBookingDate());
+        response.put("isDelete",booking.getIsDelete());
+        response.put("serviceList",listService);
+        response.put("styleId",stylist);
+        response.put("skinnerId",skinner);
+        response.put("userId",booking.getUser().getUserId());
+        response.put("workTimeId",workTimeId);
+        response.put("note",booking.getNote());
+        response.put("customerName",booking.getName());
+
+        return  new ResponseEntity<>(response,HttpStatus.OK);
     }
 
     @PostMapping("update/{bookingId}")

@@ -44,7 +44,9 @@ public class HairServiceController {
      */
 
     @GetMapping("")
+
     @RolesAllowed({"ROLE_ADMIN"})
+
     public ResponseEntity<Page<HairService>> findAllByCondition(
             @RequestParam(value = "c", defaultValue = "") String condition,
             @RequestParam(name = "p", defaultValue = "0") Integer page) {

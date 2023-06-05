@@ -35,4 +35,10 @@ public interface BranchRepository extends JpaRepository<Branch, String> {
     @Query(value = "select * from branch where branch.branch_id = :branchId", nativeQuery = true)
     Optional<Branch> findByBranchId(@Param("branchId") String branchId);
 
+    
+    
+    @Query(value = "select * from  branch",nativeQuery =true)
+    List<Branch> findAllBranch();
+    
+    
 }
