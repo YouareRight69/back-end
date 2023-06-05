@@ -3,6 +3,7 @@ package fa.youareright.controller.employee;
 import fa.youareright.dto.BookingDTO;
 import fa.youareright.model.Booking;
 import fa.youareright.model.BookingDetail;
+
 import fa.youareright.model.HairService;
 import fa.youareright.repository.*;
 import fa.youareright.service.BookingService;
@@ -25,8 +26,6 @@ public class BookingRestController {
     @Autowired
     private BranchRepository branchRepository;
     @Autowired
-    private EmployeeRepository employeeRepository;
-    @Autowired
     private WorkingTimeRepository workingTimeRepository;
     @Autowired
     private UserRepository userRepository;
@@ -35,10 +34,9 @@ public class BookingRestController {
     @Autowired
     private BookingRepository bookingRepository;
     @Autowired
-    private HairServiceRepository hairServiceRepository;
-    @Autowired
     private BookingService bookingService;
     private static final int ISDELETE = 0;
+
     @GetMapping("info/list-branch")
     public ResponseEntity<?> getListBranch() {
 
@@ -68,9 +66,9 @@ public class BookingRestController {
     @PostMapping("create")
     @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST"})
     public ResponseEntity<?> createBooking(@RequestBody BookingDTO bookingDTO) {
-        boolean isBooking = bookingDetailRepository.checkExistBooking(bookingDTO.getWorkTimeId(),bookingDTO.getStyleId(),
+        boolean isBooking = bookingDetailRepository.checkExistBooking(bookingDTO.getWorkTimeId(), bookingDTO.getStyleId(),
                 LocalDate.parse(bookingDTO.getBookingDate())).isEmpty();
-        if(!isBooking) {
+        if (!isBooking) {
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
         Booking booking = bookingService.saveBookingAndBookingDetail(bookingDTO);
@@ -109,7 +107,7 @@ public class BookingRestController {
 
     @PostMapping("update/{bookingId}")
     public ResponseEntity<?> createBooking(@RequestBody BookingDTO bookingDTO, @PathVariable("bookingId") String bookingId) {
-        Booking booking = bookingService.updateBookingAndBookingDetail(bookingDTO,bookingId);
+        Booking booking = bookingService.updateBookingAndBookingDetail(bookingDTO, bookingId);
         return new ResponseEntity<>(booking, HttpStatus.OK);
     }
 
