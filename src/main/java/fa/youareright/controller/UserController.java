@@ -46,7 +46,7 @@ public class UserController {
      */
 
     @GetMapping("")
-    @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST"})
+    @RolesAllowed({"ROLE_ADMIN", "ROLE_RECEPTIONIST"})
     public ResponseEntity<Page<User>> findAllByCondition(
             @RequestParam(value = "c", defaultValue = "") String condition,
             @RequestParam(name = "p", defaultValue = "0") Integer page) {
@@ -74,13 +74,12 @@ public class UserController {
     }
 
     @PostMapping("/updateInfo")
-    public ResponseEntity<?> updateInfo(){
+    public ResponseEntity<?> updateInfo() {
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
-<<<<<<< HEAD
 //    @GetMapping("findAll")
 //    public ResponseEntity<Page<User>> findAll( ) {
 //        Page<User> users = userService.findAll(Pageable.unpaged(),"");
@@ -97,28 +96,44 @@ public class UserController {
      * @Date 30/05/2023
      */
     @PutMapping("/{userId}")
-    @RolesAllowed({"ROLE_CUSTOMER", "ROLE_RECEPTIONIST"})
+    @RolesAllowed({"ROLE_ADMIN", "ROLE_RECEPTIONIST", "ROLE_CUSTOMER"})
     public ResponseEntity<User> updateStatus(@PathVariable String userId) {
         User user = userService.findByUserId(userId);
-        if (user== null) {
+        if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-=======
-    @GetMapping("findAll1")
-    public ResponseEntity<Page<User>> findAll1( ) {
-        Page<User> users = userService.findAll(Pageable.unpaged(),"");
-        if (users.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
->>>>>>> 0923bbd1c211ccd7822215e38ff992d192c48bd3
         }
-        userService.updateStatus(userId);
         return new ResponseEntity(HttpStatus.OK);
     }
+
+
+
+
     @GetMapping("findAll")
-    public ResponseEntity<List<User>> findAll( ) {
+    public ResponseEntity<List<User>> findAll() {
         List<User> listEmp = userRepository.findAllEmp();
         if (listEmp.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(listEmp, HttpStatus.OK);
     }
+
+
+    @GetMapping("findAllRec")
+    public ResponseEntity<List<User>> findAllRec( ) {
+        List<User> listEmp = userRepository.findAllRec();
+        if (listEmp.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(listEmp, HttpStatus.OK);
+    }
+
+    @GetMapping("/detail/{idUser}")
+    @RolesAllowed({"ROLE_CUSTOMER","ROLE_ADMIN","ROLE_RECEPTIONIST"})
+    public ResponseEntity<User> getUserById(@PathVariable String idUser) {
+        Optional<User> user = userRepository.findById(idUser);
+
+        return new ResponseEntity( user, HttpStatus.OK);
+    }
+
+
 }

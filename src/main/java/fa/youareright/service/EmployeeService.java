@@ -18,7 +18,7 @@ public interface EmployeeService {
     String getNextId(String inputId);
 
     void updateEmp(UpdateEmpDTO employee);
-    void delete(String employeeId);
+    void deleteEmpId(String employeeId);
     Optional<Employee> findById(String employeeId);
 
 }
