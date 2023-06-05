@@ -25,13 +25,20 @@ public class Branch {
     private int isDelete;
 
     @OneToMany(mappedBy = "branch")
+    @JsonBackReference
     private List<Employee> employeeList;
 
     @OneToMany(mappedBy = "branch")
     private List<Media> media;
 
-   @OneToMany(mappedBy = "branch")
-   @JsonBackReference
+
+    public Branch(String branchId) {
+        this.branchId = branchId;
+    }
+
+    @OneToMany(mappedBy = "branch")
+    @JsonBackReference
     private List<Booking> bookingList;
+
 
 }

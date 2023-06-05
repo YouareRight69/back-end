@@ -7,6 +7,7 @@ import fa.youareright.repository.*;
 import fa.youareright.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -40,21 +40,24 @@ public class BookingServiceImpl implements BookingService {
                 .orElse(null).getFullName() : bookingDTO.getCustomerName();
         Booking booking = bookingRepository
                 .save(new Booking(LocalDate.parse(bookingDTO.getBookingDate()), bookingDTO.getIsDelete(), bookingDTO.getNote(),
-                        userRepository.findById(bookingDTO.getUserId()).orElse(null), branchRepository.findById(bookingDTO.getBranch()).orElse(null)));
-       bookingDTO.getServiceList().add("SER011");
+                        userRepository.findById(bookingDTO.getUserId()).orElse(null),
+                        branchRepository.findById(bookingDTO.getBranch()).orElse(null),
+                        name));
+        bookingDTO.getServiceList().add("SER011");
         bookingDTO.getServiceList().stream().forEach((item) -> {
             if (hairServiceRepository.findById(item).orElse(null).getType()
                     .equals(employeeRepository.findById(bookingDTO.getStyleId()).orElse(null).getType())) {
-                bookingDetailRepository.save(new BookingDetail(name,
+                bookingDetailRepository.save(new BookingDetail(
                         bookingDTO.getIsDelete(),
                         hairServiceRepository.findById(item).orElse(null),
                         booking,
                         employeeRepository.findById(bookingDTO.getStyleId()).orElse(null),
                         workingTimeRepository.findById(bookingDTO.getWorkTimeId()).orElse(null)));
             } else
-                bookingDetailRepository.save(new BookingDetail(name,
+                bookingDetailRepository.save(new BookingDetail(
                         bookingDTO.getIsDelete(),
-                        hairServiceRepository.findById(item).orElse(null), booking,
+                        hairServiceRepository.findById(item).orElse(null),
+                        booking,
                         employeeRepository.findById(bookingDTO.getSkinnerId()).orElse(null),
                         workingTimeRepository.findById(bookingDTO.getWorkTimeId()).orElse(null)));
         });
@@ -67,25 +70,25 @@ public class BookingServiceImpl implements BookingService {
                 .orElse(null).getFullName() : bookingDTO.getCustomerName();
         int resultDelete = bookingDetailRepository.deleteBookingDetailByBookingId((bookingId));
 
-       Booking bookingDTOData=  new Booking( LocalDate.parse(bookingDTO.getBookingDate()),
+        Booking bookingDTOData=  new Booking( LocalDate.parse(bookingDTO.getBookingDate()),
                 bookingDTO.getIsDelete(), bookingDTO.getNote(),
                 userRepository.findById(bookingDTO.getUserId()).orElse(null),
-                branchRepository.findById(bookingDTO.getBranch()).orElse(null));
-       bookingDTOData.setBookingId(bookingId);
+                branchRepository.findById(bookingDTO.getBranch()).orElse(null), name);
+        bookingDTOData.setBookingId(bookingId);
 
         Booking booking = bookingRepository.save(bookingDTOData);
         bookingDTO.getServiceList().add("SER011");
         bookingDTO.getServiceList().stream().forEach((item) -> {
             if (hairServiceRepository.findById(item).orElse(null).getType()
                     .equals(employeeRepository.findById(bookingDTO.getStyleId()).orElse(null).getType())) {
-                bookingDetailRepository.save(new BookingDetail(name,
+                bookingDetailRepository.save(new BookingDetail(
                         bookingDTO.getIsDelete(),
                         hairServiceRepository.findById(item).orElse(null),
                         booking,
                         employeeRepository.findById(bookingDTO.getStyleId()).orElse(null),
                         workingTimeRepository.findById(bookingDTO.getWorkTimeId()).orElse(null)));
             } else
-                bookingDetailRepository.save(new BookingDetail(name,
+                bookingDetailRepository.save(new BookingDetail(
                         bookingDTO.getIsDelete(),
                         hairServiceRepository.findById(item).orElse(null), booking,
                         employeeRepository.findById(bookingDTO.getSkinnerId()).orElse(null),
@@ -96,27 +99,56 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Page<Booking> findAll(String bookingId, String name, Pageable pageable) {
+        Pageable sortPage = pageable;
+        Sort sort = Sort.by(Sort.Direction.ASC,"bookingDate");
+        sortPage = PageRequest.of(pageable.getPageNumber(),pageable.getPageSize(),sort);
+
         Specification<Booking> spec = Specification.where(null);
         if (bookingId != null && !bookingId.trim().isEmpty()) {
             spec = spec.or((root, query, builder) -> builder.like(root.get("bookingId"), "%" + bookingId + "%"));
         }
         if (name != null && !name.trim().isEmpty()) {
-            spec = spec.or((root, query, builder) -> builder.like(root.join("bookingDetailList").get("name"), "%" + name + "%"));
+            spec = spec.or((root, query, builder) -> builder.like(root.get("name"), "%" + name + "%"));
         }
         spec = spec.and((root, query, builder) -> builder.equal(root.get("isDelete"), 0));
 
         Page<Booking> result;
         if (spec.equals(Specification.where(null))) {
-            result = bookingRepository.findAll(pageable);
+            result = bookingRepository.findAll(sortPage);
         } else {
-            result = bookingRepository.findAll(spec, pageable);
+            result = bookingRepository.findAll(spec, sortPage);
         }
+
+        return result;
+    }
+    @Override
+    public Page<Booking> findAllByCustomer(String bookingId, String name, Pageable pageable) {
+        Pageable sortPage = pageable;
+        Sort sort = Sort.by(Sort.Direction.ASC,"bookingDate");
+        sortPage = PageRequest.of(pageable.getPageNumber(),pageable.getPageSize(),sort);
+
+        Specification<Booking> spec = Specification.where(null);
+        if (bookingId != null && !bookingId.trim().isEmpty()) {
+            spec = spec.or((root, query, builder) -> builder.like(root.get("bookingId"), "%" + bookingId + "%"));
+        }
+        if (name != null && !name.trim().isEmpty()) {
+            spec = spec.and((root, query, builder) -> builder.like(root.get("name"), "%" + name + "%"));
+        }
+        spec = spec.and((root, query, builder) -> builder.equal(root.get("isDelete"), 0));
+
+        Page<Booking> result;
+        if (spec.equals(Specification.where(null))) {
+            result = bookingRepository.findAll(sortPage);
+        } else {
+            result = bookingRepository.findAll(spec, sortPage);
+        }
+
         return result;
     }
 
     @Override
     public int deleteBooking(String bookingId) {
-       Booking booking = bookingRepository.findById(bookingId).orElse(null);
+        Booking booking = bookingRepository.findById(bookingId).orElse(null);
         bookingDetailRepository.deleteAll(booking.getBookingDetailList());
         return bookingRepository.deleteBooking(bookingId);
     }
